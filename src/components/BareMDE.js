@@ -12,13 +12,15 @@ const Prism =  require("./prism/prism.js")
 export class BareMDE extends Component{
   constructor(props){
      super(props);
+     this.previewThrottle = false;
      this.componentContainer = createRef();
      this.codeJarContainer = createRef();
      this.previewContainer = createRef();
      this.state ={ 
        fullscreen: props.fullscreen,
        showPreview: props.showPreview,
-       content: props.content || "# type here",
+       content: props.content,
+       // content: props.content || "# type here",
        modified: props.modified ,
        spellCheck: props.spellCheck,
        // documentPath: props.documentPath
@@ -28,9 +30,31 @@ export class BareMDE extends Component{
      this.toggleSpellcheck = this.toggleSpellcheck.bind(this);
      this.saveFile = this.saveFile.bind(this);
   }
+  shouldComponentUpdate(p){
+     // console.log("BareMDE:should component update?" , p )
+     // console.log(this.props.content);
+     if(this.props.content!=p.content){
+         this.jar.updateCode(p.content);
+         this.doPreview();
+     }
+     return true;
+  }
 
+  compomemtDidUpdate(oldS , oldP){
+  // console.log("Bare MDE updated" , oldP , this.props)
+  //if(oldP.modified!=this.props.modified){
+      
+  //}
+    if(oldP.content!=this.props.content){
+      
+      this.jar.updateCode(this.props.content); //???
+      this.doPreview();
+      
+    }
+    
+  }
   componentDidMount(){
-  // this.codeJarContainer.current.style.position = "relative";
+    // console.log("BareMDE did mount" , this.props.content)
     this.jar = CodeJar(this.codeJarContainer.current , 
     (e)=>Prism.highlightElement(e,false,null),
     {
@@ -39,7 +63,7 @@ export class BareMDE extends Component{
     }
 
     );
-    this.jar.updateCode(this.state.content);
+    this.jar.updateCode(this.props.content);
     this.doPreview();
     this.jar.onUpdate( ()=>{
 
@@ -72,14 +96,14 @@ export class BareMDE extends Component{
   }
 
   toggleFullscreen(){
-     console.log("Toggle fullscreen");
+     // console.log("Toggle fullscreen");
      const v = !this.state.fullscreen;
      if(v){ this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex }
      else{ this.componentContainer.current.style.zIndex = "unset"}
      this.setState({fullscreen: v});
   }
   togglePreview(){
-     console.log("Toggle preview");
+     // console.log("Toggle preview");
      const v = !this.state.showPreview;
      // if(v){this.doPreview()} 
      this.setState({showPreview: v});
@@ -92,10 +116,21 @@ export class BareMDE extends Component{
   this.props.save(this.jar.toString());
   }
   doPreview(force){
-     if(!this.state.showPreview&&!force){ return }
-     
-       this.previewContainer.current.innerHTML = this.props.render(this.jar.toString())
-  }
+    const redraw = ()=>{
+      this.previewContainer.current.innerHTML = this.props.render(this.jar.toString())
+    }
+    if(!this.state.showPreview&&!force){ return }
+    if(!this.previewThrottle){
+      // console.log("previewing...");
+      redraw();
+      this.previewThrottle = true;
+      window.setTimeout(()=>{ this.previewThrottle=false; redraw()} , 300);
+
+    }
+    // else{
+    //   console.log("throttled....")
+    // }
+    }
   render(){
 
     // buttons:
@@ -131,15 +166,15 @@ export class BareMDE extends Component{
 BareMDE.defaultProps = {
    render: (m)=>`<div style='color:blue'>${m}</div>`,
    onUpdate: (c)=>console.log("Editor updated" ),
-   save: (c)=>console.log("Dummy save function" , c),
+   save: (c)=>console.log("Dummy save function" , c.substring(0,200)+"..."),
    content: "write here", //text to display on mount
-   documentPath: "default" , //identifier of this content (to keep edits)
    modified: false,
    indicateChanges: true,
    previewClass: "markdownPreviewArea",
    fullScreen: false,
    showPreview: true,
    spellCheck: true,
-   fullscreenZIndex: 1001
+   fullscreenZIndex: 1001,
+   documentPath: 'default'
 
 }
