@@ -16,12 +16,13 @@ export class BareMDE extends Component{
      this.componentContainer = createRef();
      this.codeJarContainer = createRef();
      this.previewContainer = createRef();
+     this.modified = props.modified;
      this.state ={ 
        fullscreen: props.fullscreen,
        showPreview: props.showPreview,
        content: props.content,
        // content: props.content || "# type here",
-       modified: props.modified ,
+       // modified: props.modified ,
        spellCheck: props.spellCheck,
        // documentPath: props.documentPath
      }
@@ -31,10 +32,10 @@ export class BareMDE extends Component{
      this.saveFile = this.saveFile.bind(this);
   }
   shouldComponentUpdate(p){
-     // console.log("BareMDE:should component update?" , p )
-     // console.log(this.props.content);
+     //if content is reset, we have to reset.
      if(this.props.content!=p.content){
          this.jar.updateCode(p.content);
+         this.modified = p.modified;
          this.doPreview();
      }
      return true;
@@ -67,8 +68,9 @@ export class BareMDE extends Component{
     this.doPreview();
     this.jar.onUpdate( ()=>{
 
-      if(this.props.indicateChanges&&!this.state.modified){ 
+      if(this.props.indicateChanges&&!this.modified){ 
          this.setState({modified: true}) ;
+         this.modified=true;
          }
        this.props.onUpdate(this.jar.toString());
        this.doPreview();
@@ -105,7 +107,6 @@ export class BareMDE extends Component{
   togglePreview(){
      // console.log("Toggle preview");
      const v = !this.state.showPreview;
-     // if(v){this.doPreview()} 
      this.setState({showPreview: v});
      this.doPreview(true);
   }
@@ -144,14 +145,23 @@ export class BareMDE extends Component{
       <div class="toolbar top 
        ${ this.state.fullscreen ? 'fullscreen' : 'windowed' }
        ${ this.state.showPreview ? 'preview' : 'noPreview' }
-       ${ this.state.modified ? 'modified' : '' }
+       ${ this.modified ? 'modified' : '' }
       ">
          <button class="previewToggle ${this.state.showPreview ? "on" : "off"}" 
          title="Toggle Preview" onclick=${this.togglePreview}> </button>
+
+
+
          <button class="fullscreenToggle ${this.state.fullscreen? "on" : "off"}" 
          title="Toggle Fullscreen" onclick=${this.toggleFullscreen}></button>
+         
          <button class="spellcheckToggle ${this.state.spellCheck ? "on" : "off"}" 
          title="Toggle spellcheck" onclick=${this.toggleSpellcheck}></button>
+
+       ${ this.props.externalPreview ?  html`<button class="externalPreview" 
+       title=${this.props.externalPreviewTitle} onclick=${this.props.externalPreview}></button>` : ""
+           
+       }
          <button class="saveButton" title="Save File" onclick=${this.saveFile}></button>
         </div>
       <div class="workArea">
@@ -175,6 +185,8 @@ BareMDE.defaultProps = {
    showPreview: true,
    spellCheck: true,
    fullscreenZIndex: 1001,
+   externalPreview: null,
+   externalPreviewTitle: "External Preview",
    documentPath: 'default'
 
 }

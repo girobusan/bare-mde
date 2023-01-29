@@ -33,7 +33,7 @@ ${ticks}
 
 `
 
-const editor = h(BareMDE , { render: renderMd , content: testString , spellCheck: false});
+const editor = h(BareMDE , { render: renderMd , content: testString , spellCheck: false , externalPreview: ()=>console.log("external")  });
 console.log("created" , editor);
 render( editor, document.getElementById("editorTest") );
 console.log("rendered");
