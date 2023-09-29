@@ -13,41 +13,55 @@ export class BareMDE extends Component{
   constructor(props){
      super(props);
      this.previewThrottle = false;
+     this.scrollThrottled = false;
      this.componentContainer = createRef();
      this.codeJarContainer = createRef();
      this.previewContainer = createRef();
-     this.modified = props.modified;
+     // this.modified = props.modified;
      this.state ={ 
        fullscreen: props.fullscreen,
        showPreview: props.showPreview,
        content: props.content,
+       // modified: false,
        // content: props.content || "# type here",
        // modified: props.modified ,
        spellCheck: props.spellCheck,
+       syncScroll: true,
        // documentPath: props.documentPath
      }
      this.togglePreview = this.togglePreview.bind(this);
      this.toggleFullscreen = this.toggleFullscreen.bind(this);
      this.toggleSpellcheck = this.toggleSpellcheck.bind(this);
      this.saveFile = this.saveFile.bind(this);
+     this.syncPreviewScroll = this.syncPreviewScroll.bind(this);
   }
-  shouldComponentUpdate(p){
+  shouldComponentUpdate(p , s){
+     // console.log("should BM update?" , this.jar.save())
      //if content is reset, we have to reset.
-     if(this.props.content!=p.content){
+     this.pos = this.jar.save();
+     if(this.props.contentId!=p.contentId){
+         console.log("Update content...")
+         
+         // this.pos =null;
          this.jar.updateCode(p.content);
-         this.modified = p.modified;
+         // this.modified = p.modified;
          this.doPreview();
      }
+
+    if( s.syncScroll && !this.state.syncScroll ){
+       this.syncPreviewScroll(true);
+    }
      return true;
   }
 
   compomemtDidUpdate(oldS , oldP){
-  // console.log("Bare MDE updated" , oldP , this.props)
+  console.log("Bare MDE updated" , this.jar.save())
+  if(oldP.content ==this.props.content){ this.jar.restore(this.pos) ; this.pos = null }
   //if(oldP.modified!=this.props.modified){
       
   //}
     if(oldP.content!=this.props.content){
-      
+      console.log("Update JAR") 
       this.jar.updateCode(this.props.content); //???
       this.doPreview();
       
@@ -67,13 +81,15 @@ export class BareMDE extends Component{
     this.jar.updateCode(this.props.content);
     this.doPreview();
     this.jar.onUpdate( ()=>{
+        this.pos = this.jar.save();
 
-      if(this.props.indicateChanges&&!this.modified){ 
-         this.setState({modified: true}) ;
-         this.modified=true;
-         }
+      // if(this.props.indicateChanges&&!this.props.modified){ 
+      //    // this.ste({modified: true}) ;
+      //    // this.modified=true;
+      //    }
        this.props.onUpdate(this.jar.toString());
        this.doPreview();
+        // console.log("local update end" , this.jar.save());
     } )
   }
 
@@ -90,6 +106,36 @@ export class BareMDE extends Component{
     return t;
     
   }
+  syncPreviewScroll(force){
+    if(!this.state.syncScroll && !force ){ return }
+    if(!this.state.showPreview){ return }
+    if(this.scrollThrottled){ 
+      return }
+      this.scrollThrottled = true;
+      const doScroll = ()=>{
+        //preview
+        const previewFullH = this.previewContainer.current.scrollHeight;
+        //editor
+        const editorFullH = this.codeJarContainer.current.scrollHeight;
+        const editorScrolled = this.codeJarContainer.current.scrollTop;
+
+        const elementHeight = this.previewContainer.current.getBoundingClientRect().height;
+        //if one of them can not scroll, do nothing
+        if(previewFullH<=elementHeight || editorFullH<=elementHeight ){ return }
+
+        const editorRatio = editorScrolled/( editorFullH - elementHeight );
+
+
+        const scrollPreviewTo =  ( previewFullH-elementHeight ) * editorRatio;
+        this.previewContainer.current.scrollTo({top: scrollPreviewTo , left:0 , behavior: "smooth"});
+      }
+      doScroll()
+
+      window.setTimeout( ()=>{ this.scrollThrottled=false ; doScroll() } , 300 );
+
+
+  }
+
   toggleSpellcheck(){
 
     this.jar.updateOptions({spellcheck: !this.state.spellCheck});
@@ -111,15 +157,16 @@ export class BareMDE extends Component{
      this.doPreview(true);
   }
   saveFile(){
-    console.info("saving...")
-    if(this.props.indicateChanges&&this.state.modified)
-    { this.setState({modified:false}) } 
+    // console.info("saving..." , this.props.indicateChanges , this.state.modified)
+    // if(this.props.indicateChanges&&this.state.modified)
+    // { this.setState({modified:false}) } 
   this.props.save(this.jar.toString());
   }
   doPreview(force){
     const redraw = ()=>{
       this.previewContainer.current.innerHTML = this.props.render(this.jar.toString())
       const imgs = this.previewContainer.current.querySelectorAll("*[src]");
+      this.syncPreviewScroll();
       imgs.forEach(i=>{
         if(i.getAttribute("src").match(/^http(s)?:/)){
           return;
@@ -142,6 +189,12 @@ export class BareMDE extends Component{
     }
 
   render(){
+     // console.log("bareMDE render" , this.jar ? this.jar.save() : "no jar");
+     // fix cursor position on render
+     if(this.pos)
+     {
+       this.jar.restore(this.pos)
+     }
 
     // buttons:
     // toggle preview , toggle fullscreen , <preview only?> , save
@@ -154,7 +207,7 @@ export class BareMDE extends Component{
       <div class="toolbar top 
        ${ this.state.fullscreen ? 'fullscreen' : 'windowed' }
        ${ this.state.showPreview ? 'preview' : 'noPreview' }
-       ${ this.modified ? 'modified' : '' }
+       ${ this.props.modified ? 'modified' : '' }
       ">
          <button class="previewToggle ${this.state.showPreview ? "on" : "off"}" 
          title="Toggle Preview" onclick=${this.togglePreview}> </button>
@@ -167,14 +220,16 @@ export class BareMDE extends Component{
          <button class="spellcheckToggle ${this.state.spellCheck ? "on" : "off"}" 
          title="Toggle spellcheck" onclick=${this.toggleSpellcheck}></button>
 
-       ${ this.props.externalPreview ?  html`<button class="externalPreview" 
-       title=${this.props.externalPreviewTitle} onclick=${this.props.externalPreview}></button>` : ""
+         <button class="syncScrollToggle ${this.state.syncScroll ? "on" : "off"}" 
+         title="Sync preview scroll" onclick=${()=>{ this.setState({syncScroll: !this.state.syncScroll}) }}></button>
+
+       ${ this.props.externalPreview ?  html`<button class="externalPreview" title=${this.props.externalPreviewTitle} onclick=${this.props.externalPreview}></button>` : ""
            
        }
          <button class="saveButton" title="Save File" onclick=${this.saveFile}></button>
         </div>
       <div class="workArea">
-        <div  class="codeJar language-md" ref=${this.codeJarContainer}></div>
+        <div  class="codeJar language-md" ref=${this.codeJarContainer} onscroll=${(e)=>this.syncPreviewScroll()}></div>
         <div class="preview ${this.props.previewClass}" ref=${this.previewContainer}></div>
       </div>
     </div>`
@@ -187,6 +242,7 @@ BareMDE.defaultProps = {
    onUpdate: (c)=>console.log("Editor updated" ),
    save: (c)=>console.log("Dummy save function" , c.substring(0,200)+"..."),
    content: "write here", //text to display on mount
+   contentId: null, //id of content to track the changes
    modified: false,
    indicateChanges: true,
    previewClass: "markdownPreviewArea",
@@ -196,7 +252,6 @@ BareMDE.defaultProps = {
    fullscreenZIndex: 1001,
    externalPreview: null,
    externalPreviewTitle: "External Preview",
-   documentPath: 'default',
    imageRewriter: (p)=>p
 
 }
