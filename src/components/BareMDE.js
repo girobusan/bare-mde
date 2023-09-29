@@ -119,7 +119,15 @@ export class BareMDE extends Component{
   doPreview(force){
     const redraw = ()=>{
       this.previewContainer.current.innerHTML = this.props.render(this.jar.toString())
+      const imgs = this.previewContainer.current.querySelectorAll("*[src]");
+      imgs.forEach(i=>{
+        if(i.getAttribute("src").match(/^http(s)?:/)){
+          return;
+        }
+        i.src = this.props.imageRewriter(i.getAttribute( "src" ));
+      })
     }
+
     if(!this.state.showPreview&&!force){ return }
     if(!this.previewThrottle){
       // console.log("previewing...");
@@ -132,6 +140,7 @@ export class BareMDE extends Component{
     //   console.log("throttled....")
     // }
     }
+
   render(){
 
     // buttons:
@@ -187,6 +196,7 @@ BareMDE.defaultProps = {
    fullscreenZIndex: 1001,
    externalPreview: null,
    externalPreviewTitle: "External Preview",
-   documentPath: 'default'
+   documentPath: 'default',
+   imageRewriter: (p)=>p
 
 }
