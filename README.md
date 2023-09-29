@@ -4,7 +4,10 @@ Basic markdown editor, based on CodeJar, packed as Preact component. Probably, n
 
 - As minimal, as possible
 - Browser native spellcheck
-- Ruled by upper-level component
+- Passed by upper-level component:
+   * Markdown render function 
+   * Save function
+   * External preview function
 
 ![screenshot](docs/screen_00.png)
 
