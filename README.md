@@ -1,6 +1,8 @@
 # Bare MDE :bear:
 
-Basic markdown editor, based on CodeJar, packed as Preact component. Probably, not the embeddable markdown editor you're looking for.
+Basic markdown editor, based on CodeJar, packed as Preact component. Made for [My Markdown Site](https://github.com/girobusan/mmds) project.
+
+Probably, not the embeddable markdown editor you're looking for.
 
 - As minimal, as possible
 - Browser native spellcheck
