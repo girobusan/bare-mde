@@ -36,7 +36,7 @@ module.exports = function (env, argv) {
       "testcase": './src/test_case.js',
     },
     devtool: argv.mode != "production" ? 'inline-source-map' : false, 
-    devServer: argv.mode != "production" ? {contentBase: 'dist'} : {contentBase: 'dist'},
+    devServer: argv.mode != "production" ? {contentBase: 'dist'} : {contentBase: 'test'},
 
     output: {
     //   filename: '[name].js',

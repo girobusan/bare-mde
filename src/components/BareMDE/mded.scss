@@ -1,152 +1,192 @@
 .BareMDE{
-   // all: initial;
-   display: flex;
-   flex-direction: column;
-   box-sizing: border-box;
-   border: 1px solid #666;
-   border-radius: 4px;
-   // overflow: hidden;
-   // max-height: 100%;
-   // position: absolute;
-   padding: 0;
-   // background-color: #ccc;
-   &.fullscreen{
-     position: fixed;
-     top: 0;
-     left: 0;
-     right:0;
-     bottom:0;
-     border-radius: 0;
-     border: none;
-     z-index: 1000;
-   }
-   .toolbar{
-     // margin: -1px -1px 0 -1px;
-     border-radius: 3px 3px 0 0 ;
-     // border-color: white;
-     // border-width: 1px 1px 0 1px;
-      background-color: #223  ;
-      padding: 6px;
-      text-align: center;
-      flex-grow: 0;
-      &.modified button.saveButton{
-          background-color: orangered;
-          &:hover{
-            border-color: transparent;
-          }
-      }
-      
+  // all: initial;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  border: 1px solid #666;
+  border-radius: 4px;
+  // overflow: hidden;
+  // max-height: 100%;
+  // position: absolute;
+  padding: 0;
+  // background-color: #ccc;
+  &.fullscreen{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    border-radius: 0;
+    border: none;
+    z-index: 1000;
+  }
+  .toolbar{
+    // margin: -1px -1px 0 -1px;
+    border-radius: 3px 3px 0 0 ;
+    background-color: #223  ;
+    color: white;
+    padding: 6px;
+    text-align: center;
+    flex-grow: 0;
+    .EditorMenu{
+      float: left;
+      position: relative;
+      width: 32px;
+      text-align: left;
       button{
-        all:initial;
-        transition: background-color .5s;
-        appearance: none;
-        border: 1px solid transparent;
-        border-radius: 6px;
+        border: none;
         width: 32px;
         height: 32px;
-        display: inline-block;
-        cursor: pointer;
-        margin-right: 6px;
-        background-repeat: no-repeat;
-        background-position: 4px 4px;
-        &:hover{
-          border-color: gray;
-        }
-        &.on{
-          border-color: gray;
-        }
-
-        &:last-child{
-          margin-right: 0;
-        }
-        &.previewToggle{
-          background-image: url(./icons/side-by-side-min.svg);
-          &.on{
-            background-image: url(./icons/no-preview-2.svg);
+        background-image: url("./icons/menu_FILL0_wght400_GRAD0_opsz24.svg");
+      }
+      .menuItems{
+        min-width: 250px;
+        position: absolute;
+        background-color: #bdbdbd;
+        padding: 0;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0px 0px 24px rgba( 0 , 0 , 0 , 0.8 );
+        .Item{
+          padding: 6px 12px;
+          user-select: none;
+          cursor: pointer;
+          border-bottom: 1px solid #aaa;
+          color: #333;
+          &:first-child{
+            padding-top: 8px; 
           }
-        }
-        &.fullscreenToggle{
-          background-image: url(./icons/fullscreen_FILL0_wght400_GRAD0_opsz24.svg);
-          &.on{
-            background-image: url(./icons/fullscreen_exit_FILL0_wght400_GRAD0_opsz24.svg);
+          &:last-child{
+            border-bottom: none;
+            padding-bottom: 8px;
           }
-        }
-        &.syncScrollToggle{
-           background-image: url(./icons/swap_vert_FILL0_wght400_GRAD0_opsz24.svg);
-          &.on{
-            background-image: url(./icons/arrows_locked.svg);
-          }
-        }
-        &.externalPreview{
-          background-image: url(./icons/visibility_FILL0_wght400_GRAD0_opsz24.svg);
-        }
-        &.saveButton{
-          background-image: url(./icons/save_white.svg);
-        }
-        &.spellcheckToggle{
-          background-image: url(./icons/spellcheck_FILL1_wght400_GRAD0_opsz24.svg);
-          &.on{
-            background-image: url(./icons/spellcheck_active_minified.svg);
+          &:hover{
+            background-color: gray;
+            color: white;
           }
         }
       }
-   }
-   .workArea{
-     flex-grow: 1;
-     display: flex;
-     flex-direction: row;
-     min-height: 200px;
-     // max-height: 100%;
-     .codeJar , .preview{
-        scrollbar-width: thin;
-        scrollbar-color: black #dddddd;
-        &::-webkit-scrollbar{
-          width: 4px;
+
+
+    }
+    &.modified button.saveButton{
+      background-color: orangered;
+      &:hover{
+        border-color: transparent;
+      }
+    }
+
+    button{
+      all:initial;
+      transition: background-color .5s;
+      appearance: none;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+      cursor: pointer;
+      margin-right: 6px;
+      background-repeat: no-repeat;
+      background-position: 4px 4px;
+      &:hover{
+        border-color: gray;
+      }
+      &.on{
+        border-color: gray;
+      }
+
+      &:last-child{
+        margin-right: 0;
+      }
+      &.previewToggle{
+        background-image: url(./icons/side-by-side-min.svg);
+        &.on{
+          background-image: url(./icons/no-preview-2.svg);
         }
-        &::-webkit-scrollbar-track{
-          background: #dddddd;
+      }
+      &.fullscreenToggle{
+        background-image: url(./icons/fullscreen_FILL0_wght400_GRAD0_opsz24.svg);
+        &.on{
+          background-image: url(./icons/fullscreen_exit_FILL0_wght400_GRAD0_opsz24.svg);
         }
-        &::-webkit-scrollbar-thumb{
-          background-color: black;
-          border-radius: 4px;
+      }
+      &.syncScrollToggle{
+        background-image: url(./icons/swap_vert_FILL0_wght400_GRAD0_opsz24.svg);
+        &.on{
+          background-image: url(./icons/arrows_locked.svg);
         }
-     }
-     
-     .codeJar{
-       border-bottom-left-radius: 4px;
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', ui-monospace , monospace;
-     
-    ::spelling-error{
-     background-color: yellow;
-   }
-     font-size: 18px;
-     line-height: 150%;
-     color: #333;
-       flex-grow: 1;
-       padding: 8px;
-       background-color: #e4e3e2;
-       overflow: auto;
-       flex-basis:0;
-       
-     }
-     .preview{
-       border-bottom-right-radius: 4px;
-       flex-grow: 1;
-       padding: 16px;
-       max-width: 50%;
-       border-left: 1px solid #ddd;
-       overflow: auto;
-       flex-basis: 0;
-       img , video , audio , iframe, object{
-         max-width: 100% !important;
-       }
-     }
-   }
-   &.noPreview{
-     .preview{
-       display: none;
-     }
-   }
+      }
+      &.externalPreview{
+        background-image: url(./icons/visibility_FILL0_wght400_GRAD0_opsz24.svg);
+      }
+      &.saveButton{
+        background-image: url(./icons/save_white.svg);
+      }
+      &.spellcheckToggle{
+        background-image: url(./icons/spellcheck_FILL1_wght400_GRAD0_opsz24.svg);
+        &.on{
+          background-image: url(./icons/spellcheck_active_minified.svg);
+        }
+      }
+    }
+  }
+  .workArea{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    min-height: 200px;
+    // max-height: 100%;
+    .codeJar , .preview{
+      scrollbar-width: thin;
+      scrollbar-color: black #dddddd;
+      &::-webkit-scrollbar{
+        width: 4px;
+      }
+      &::-webkit-scrollbar-track{
+        background: #dddddd;
+      }
+      &::-webkit-scrollbar-thumb{
+        background-color: black;
+        border-radius: 4px;
+      }
+    }
+
+    .codeJar{
+      border-bottom-left-radius: 4px;
+      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', ui-monospace , monospace;
+
+      ::spelling-error{
+        background-color: yellow;
+      }
+      font-size: 18px;
+      line-height: 150%;
+      color: #333;
+      flex-grow: 1;
+      padding: 8px;
+      background-color: #e4e3e2;
+      overflow: auto;
+      flex-basis:0;
+
+    }
+    .preview{
+      border-bottom-right-radius: 4px;
+      flex-grow: 1;
+      padding: 16px;
+      max-width: 50%;
+      border-left: 1px solid #ddd;
+      overflow: auto;
+      flex-basis: 0;
+      img , video , audio , iframe, object{
+        max-width: 100% !important;
+      }
+    }
+  }
+  &.noPreview{
+    .preview{
+      display: none;
+    }
+  }
 }
 //states
 // .mdBear .noPreview .workArea .preview{

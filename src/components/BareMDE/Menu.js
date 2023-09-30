@@ -1,0 +1,63 @@
+import { Component, createRef } from "preact";
+import {html} from "htm/preact";
+import { If } from "./If";
+
+
+export class Menu extends Component{
+  constructor(props){
+    super(props);
+    this.state = {
+      open: false
+    }
+    this.handleItem = this.handleItem.bind(this);
+    this.doClose=this.doClose.bind(this);
+
+  }
+
+  handleItem(i){
+    this.props.items[i].handler();
+    // this.setState({"open" : false});
+  }
+
+  doClose(e){
+    console.log("do close") 
+    this.setState({ "open" : false })
+  }
+
+  componentDidUpdate(previousProps, previousState){
+    if(this.state.open===true && previousState.open===false){
+       window.addEventListener("click", this.doClose)
+    }
+    if(this.state.open===false && previousState.open===true){
+       window.removeEventListener("click", this.doClose)
+    }
+    return true;
+    
+  }
+
+  render(){
+    if(!this.props.items || this.props.items.length==0){ return "" }
+    const my = this;
+    return html`
+    <div class="EditorMenu">
+    <button
+    title=${this.props.title || "Menu"}
+    onClick=${(e)=>{  e.stopPropagation() ; e.preventDefault(); this.setState({ open: !this.state.open }) }}></button>
+    <${If} condition=${this.state.open}>
+    <div class="menuItems">
+    ${ this.props.items.map( 
+    (e,i)=>html`<div class="Item" onMouseDown=${ ()=>my.handleItem(i) }>${e.label}</div>` 
+    ) }
+    </div>
+    </${If}>
+    </div>
+
+    `
+    }
+  }
+
+
+Menu.defaultProps = {
+  zIndex: 1100,
+}
+

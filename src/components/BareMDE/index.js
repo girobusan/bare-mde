@@ -6,6 +6,8 @@ require("./prism/prism_fixed.scss");
 require("./mded.scss")
 const Prism =  require("./prism/prism.js")
 
+import { Menu } from "./Menu";
+
 // console.log(Prism);
 
 
@@ -17,17 +19,12 @@ export class BareMDE extends Component{
      this.componentContainer = createRef();
      this.codeJarContainer = createRef();
      this.previewContainer = createRef();
-     // this.modified = props.modified;
      this.state ={ 
-       fullscreen: props.fullscreen,
+       fullscreen: props.fullScreen,
        showPreview: props.showPreview,
        content: props.content,
-       // modified: false,
-       // content: props.content || "# type here",
-       // modified: props.modified ,
        spellCheck: props.spellCheck,
        syncScroll: true,
-       // documentPath: props.documentPath
      }
      this.togglePreview = this.togglePreview.bind(this);
      this.toggleFullscreen = this.toggleFullscreen.bind(this);
@@ -39,10 +36,9 @@ export class BareMDE extends Component{
      // console.log("should BM update?" , this.jar.save())
      //if content is reset, we have to reset.
      this.pos = this.jar.save();
-     if(this.props.contentId!=p.contentId){
+     if(this.props.contentId!==p.contentId){
          console.log("Update content...")
          
-         // this.pos =null;
          this.jar.updateCode(p.content);
          // this.modified = p.modified;
          this.doPreview();
@@ -55,21 +51,23 @@ export class BareMDE extends Component{
   }
 
   compomemtDidUpdate(oldS , oldP){
-  console.log("Bare MDE updated" , this.jar.save())
-  if(oldP.content ==this.props.content){ this.jar.restore(this.pos) ; this.pos = null }
-  //if(oldP.modified!=this.props.modified){
-      
-  //}
-    if(oldP.content!=this.props.content){
+    // console.log("Bare MDE updated" , this.jar.save())
+    // if component updated,
+    // but text is not,
+    // it means, we have to return cursor
+    // to last known position
+    if(oldP.content ==this.props.content){ 
+      this.jar.restore(this.pos) ; 
+      this.pos = null ; // #FIXME
+    } else{
       console.log("Update JAR") 
       this.jar.updateCode(this.props.content); //???
       this.doPreview();
-      
+
     }
     
   }
   componentDidMount(){
-    // console.log("BareMDE did mount" , this.props.content)
     this.jar = CodeJar(this.codeJarContainer.current , 
     (e)=>Prism.highlightElement(e,false,null),
     {
@@ -81,15 +79,9 @@ export class BareMDE extends Component{
     this.jar.updateCode(this.props.content);
     this.doPreview();
     this.jar.onUpdate( ()=>{
-        this.pos = this.jar.save();
-
-      // if(this.props.indicateChanges&&!this.props.modified){ 
-      //    // this.ste({modified: true}) ;
-      //    // this.modified=true;
-      //    }
-       this.props.onUpdate(this.jar.toString());
-       this.doPreview();
-        // console.log("local update end" , this.jar.save());
+      this.pos = this.jar.save();
+      typeof this.props.onUpdate==='function' && this.props.onUpdate(this.jar.toString());
+      this.doPreview();
     } )
   }
 
@@ -113,9 +105,9 @@ export class BareMDE extends Component{
       return }
       this.scrollThrottled = true;
       const doScroll = ()=>{
-        //preview
+        //preview height
         const previewFullH = this.previewContainer.current.scrollHeight;
-        //editor
+        //editor height
         const editorFullH = this.codeJarContainer.current.scrollHeight;
         const editorScrolled = this.codeJarContainer.current.scrollTop;
 
@@ -154,13 +146,10 @@ export class BareMDE extends Component{
      // console.log("Toggle preview");
      const v = !this.state.showPreview;
      this.setState({showPreview: v});
-     this.doPreview(true);
+     v && this.doPreview(true);
   }
   saveFile(){
-    // console.info("saving..." , this.props.indicateChanges , this.state.modified)
-    // if(this.props.indicateChanges&&this.state.modified)
-    // { this.setState({modified:false}) } 
-  this.props.save(this.jar.toString());
+    typeof this.props.save==='function' && this.props.save(this.jar.toString());
   }
   doPreview(force){
     const redraw = ()=>{
@@ -171,7 +160,9 @@ export class BareMDE extends Component{
         if(i.getAttribute("src").match(/^http(s)?:/)){
           return;
         }
-        i.src = this.props.imageRewriter(i.getAttribute( "src" ));
+        if(typeof this.props.imageRewriter==='function'){
+          i.src = this.props.imageRewriter(i.getAttribute( "src" ));
+        }
       })
     }
 
@@ -183,13 +174,9 @@ export class BareMDE extends Component{
       window.setTimeout(()=>{ this.previewThrottle=false; redraw()} , 300);
 
     }
-    // else{
-    //   console.log("throttled....")
-    // }
     }
 
   render(){
-     // console.log("bareMDE render" , this.jar ? this.jar.save() : "no jar");
      // fix cursor position on render
      if(this.pos)
      {
@@ -209,13 +196,18 @@ export class BareMDE extends Component{
        ${ this.state.showPreview ? 'preview' : 'noPreview' }
        ${ this.props.modified ? 'modified' : '' }
       ">
+         <${Menu} 
+         title=${this.props.menuTitle || "Additional functions"}
+         label="Test" items=${this.props.menuItems}/>
          <button class="previewToggle ${this.state.showPreview ? "on" : "off"}" 
          title="Toggle Preview" onclick=${this.togglePreview}> </button>
 
 
 
          <button class="fullscreenToggle ${this.state.fullscreen? "on" : "off"}" 
-         title="Toggle Fullscreen" onclick=${this.toggleFullscreen}></button>
+         title="Toggle Fullscreen" onclick=${this.toggleFullscreen}
+style=${"display:" + ( this.props.disable.indexOf("fullscreen")!=-1 ? "none" : "" )}
+         ></button>
          
          <button class="spellcheckToggle ${this.state.spellCheck ? "on" : "off"}" 
          title="Toggle spellcheck" onclick=${this.toggleSpellcheck}></button>
@@ -252,6 +244,7 @@ BareMDE.defaultProps = {
    fullscreenZIndex: 1001,
    externalPreview: null,
    externalPreviewTitle: "External Preview",
-   imageRewriter: (p)=>p
+   imageRewriter: (p)=>p,
+   disable: []
 
 }

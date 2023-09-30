@@ -73,5 +73,23 @@ Hint text for external preview button.
 imageRewriter
 -------------
 
-Function, which will be applied to all images in preview panel. Useful, when you have to rewrite paths for preview.
+Function, which will be applied to all images in preview panel. This function will receive `src` attribute and must return string (rewritten src). Useful, when you have to rewrite paths for preview.
+
+menuItems
+---------
+
+Optional array of items for drop-down menu. If not present, menu is not shown.
+
+```
+items=[
+   { label: "Label" , "handler" : ()=>console.log("click") },
+   ...
+]
+
+```
+
+menuTitle
+---------
+
+Title for menu button. Default = "Additional functions"
 

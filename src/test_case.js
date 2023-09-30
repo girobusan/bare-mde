@@ -2,6 +2,10 @@ import {h, render} from "preact";
 import { BareMDE } from "./components/BareMDE";
 import { renderMd } from "./mdops"
 const ticks = "```"
+const menu = [ 
+   { "label": "test menu items" , "handler": ()=>console.log("Menu item clicked") },
+   { "label": "test2" , "handler": ()=>console.log("Menu item2 clicked") },
+   ]
 const testString = `
 This is a heading
 ==================
@@ -33,7 +37,7 @@ ${ticks}
 
 `
 
-const editor = h(BareMDE , { render: renderMd , content: testString , spellCheck: false , externalPreview: ()=>console.log("external")  });
+const editor = h(BareMDE , { disable: [] , menuItems: menu ,fullScreen: true ,render: renderMd , content: testString , spellCheck: false , externalPreview: ()=>console.log("external")  });
 console.log("created" , editor);
 render( editor, document.getElementById("editorTest") );
 console.log("rendered");
