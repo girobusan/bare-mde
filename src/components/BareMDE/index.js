@@ -134,7 +134,7 @@ export class BareMDE extends Component{
       );
     }
     doScroll()
-    window.setTimeout( ()=>{ this.scrollThrottled=false ; doScroll() } , 300 );
+    window.setTimeout( ()=>{ this.scrollThrottled=false ; doScroll() } , 100 );
 
   }
 
@@ -171,7 +171,7 @@ export class BareMDE extends Component{
     } 
      const v = !this.state.fullPreview;
      this.setState({fullPreview: v});
-     v && this.doPreview(true);
+     this.doPreview();
   }
   saveFile(){
     typeof this.props.save==='function' && this.props.save(this.jar.toString());
@@ -200,7 +200,7 @@ export class BareMDE extends Component{
         frameDoc.body.offsetHeight,
         frameDoc.documentElement.scrollHeight,
         frameDoc.documentElement.offsetHeight,
-        this.codeJarContainer.current.getBoundingClientRect().height
+        this.previewContainer.current.getBoundingClientRect().height
       )
       // console.log(
 
