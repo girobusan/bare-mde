@@ -224,7 +224,7 @@ export class BareMDE extends Component{
     // buttons:
     // toggle preview , toggle fullscreen , <preview only?> , save
 
-    return html`<div class="BareMDE BearMDE 
+    return html`<div class="BareMDE 
        ${ this.state.fullscreen ? 'fullscreen' : 'windowed' }
        ${ this.state.showPreview ? 'preview' : 'noPreview' }
        ${ this.state.fullPreview ? 'fullPreview' : '' }
