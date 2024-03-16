@@ -72,7 +72,7 @@ export class BareMDE extends Component{
   }
   componentWillUnmount(){
 
-    window.removeEventListener("resize", this.doPreview())
+    window.removeEventListener("resize", this.doPreview)
   }
   componentDidMount(){
     this.jar = CodeJar(this.codeJarContainer.current , 
@@ -90,7 +90,7 @@ export class BareMDE extends Component{
       typeof this.props.onUpdate==='function' && this.props.onUpdate(this.jar.toString());
       this.doPreview();
     } );
-    window.addEventListener("resize", this.doPreview())
+    window.addEventListener("resize", this.doPreview)
   }
 
   createToggler(propName){
@@ -196,11 +196,19 @@ export class BareMDE extends Component{
         })
       }
       const dHeight = Math.max(
-        frameDoc.body.scrollHeight,
+        // frameDoc.body.scrollHeight,
         frameDoc.body.offsetHeight,
         frameDoc.documentElement.scrollHeight,
         frameDoc.documentElement.offsetHeight,
+        this.codeJarContainer.current.getBoundingClientRect().height
       )
+      // console.log(
+
+      //   frameDoc.body.scrollHeight,
+      //   frameDoc.body.offsetHeight,
+      //   frameDoc.documentElement.scrollHeight,
+      //   frameDoc.documentElement.offsetHeight,
+      // )
       this.previewFrame.current.style.height = dHeight+"px";
       this.syncPreviewScroll();
     }
