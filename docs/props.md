@@ -1,9 +1,9 @@
-BareMDE props
+BareMDE :bear: props
 =============
 
 render
 ------
-Function, which gets markdown text as a parameter and returns rendered HTML. Required.
+Function, which gets markdown text as a parameter and returns rendered HTML. This function have to return *full HTML,* with head, body, etc. Required.
 
 onUpdate
 ------
@@ -80,7 +80,7 @@ menuItems
 
 Optional array of items for drop-down menu. If not present, menu is not shown.
 
-```
+```javascript
 items=[
    { label: "Label" , "handler" : ()=>console.log("click") },
    ...

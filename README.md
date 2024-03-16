@@ -6,6 +6,9 @@ Probably, not the embeddable markdown editor you're looking for.
 
 - As minimal, as possible
 - Browser native spellcheck
+- Fully isolated preview panel (iframe)
+- Split preview, full preview
+- Sync preview scroll (more or less accurate)
 - Passed by upper-level component:
    * Markdown render function 
    * Save function

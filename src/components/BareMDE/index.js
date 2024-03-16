@@ -9,6 +9,9 @@ const Prism =  require("./prism/prism.js")
 import { Menu } from "./Menu";
 
 // console.log(Prism);
+function makeHTML( css, head, body ){
+ return `<html><head>${head}<style>${css}</style></head><body>${body}</body></html>`
+}
 
 
 export class BareMDE extends Component{
@@ -19,14 +22,17 @@ export class BareMDE extends Component{
      this.componentContainer = createRef();
      this.codeJarContainer = createRef();
      this.previewContainer = createRef();
+     this.previewFrame = createRef();
      this.state ={ 
        fullscreen: props.fullScreen,
        showPreview: props.showPreview,
+       fullPreview: false,
        content: props.content,
        spellCheck: props.spellCheck,
        syncScroll: true,
      }
      this.togglePreview = this.togglePreview.bind(this);
+     this.toggleFullPreview = this.toggleFullPreview.bind(this);
      this.toggleFullscreen = this.toggleFullscreen.bind(this);
      this.toggleSpellcheck = this.toggleSpellcheck.bind(this);
      this.saveFile = this.saveFile.bind(this);
@@ -143,9 +149,18 @@ export class BareMDE extends Component{
      this.setState({fullscreen: v});
   }
   togglePreview(){
-     // console.log("Toggle preview");
+     console.log("Toggle preview");
      const v = !this.state.showPreview;
      this.setState({showPreview: v});
+     v && this.doPreview(true);
+  }
+  toggleFullPreview(){
+    console.log("toggle FP")
+    if( typeof this.props.externalPreview == 'function' ){ 
+        return this.props.externalPreview();
+    } 
+     const v = !this.state.fullPreview;
+     this.setState({fullPreview: v});
      v && this.doPreview(true);
   }
   saveFile(){
@@ -153,17 +168,28 @@ export class BareMDE extends Component{
   }
   doPreview(force){
     const redraw = ()=>{
-      this.previewContainer.current.innerHTML = this.props.render(this.jar.toString())
-      const imgs = this.previewContainer.current.querySelectorAll("*[src]");
-      this.syncPreviewScroll();
-      imgs.forEach(i=>{
-        if(i.getAttribute("src").match(/^http(s)?:/)){
-          return;
-        }
-        if(typeof this.props.imageRewriter==='function'){
-          i.src = this.props.imageRewriter(i.getAttribute( "src" ));
-        }
-      })
+       const frameDoc = this.previewFrame.current.contentWindow.document;
+       frameDoc.open();
+       frameDoc.write( this.props.render(this.jar.toString()) )
+       frameDoc.close();
+       const dHeight = Math.max(
+          frameDoc.body.scrollHeight,
+          frameDoc.body.offsetHeight,
+          frameDoc.documentElement.scrollHeight,
+          frameDoc.documentElement.offsetHeight,
+       )
+
+       if(typeof this.props.imageRewriter==='function'){
+         const imgs = frameDoc.querySelectorAll("*[src]");
+         imgs.forEach(i=>{
+           if(i.getAttribute("src").match(/^http(s)?:/)){
+             return;
+           }
+             i.src = this.props.imageRewriter(i.getAttribute( "src" ));
+         })
+       }
+       this.previewFrame.current.style.height = dHeight+"px";
+       this.syncPreviewScroll();
     }
 
     if(!this.state.showPreview&&!force){ return }
@@ -188,7 +214,9 @@ export class BareMDE extends Component{
 
     return html`<div class="BareMDE BearMDE 
        ${ this.state.fullscreen ? 'fullscreen' : 'windowed' }
-       ${ this.state.showPreview ? 'preview' : 'noPreview' }"
+       ${ this.state.showPreview ? 'preview' : 'noPreview' }
+       ${ this.state.fullPreview ? 'fullPreview' : '' }
+       "
        ref=${this.componentContainer}
     >
       <div class="toolbar top 
@@ -201,6 +229,10 @@ export class BareMDE extends Component{
          label="Test" items=${this.props.menuItems}/>
          <button class="previewToggle ${this.state.showPreview ? "on" : "off"}" 
          title="Toggle Preview" onclick=${this.togglePreview}> </button>
+
+          <button class="externalPreview ${this.state.fullPreview? "on" : "off"}" 
+          title=${this.props.externalPreviewTitle || "Only preview"} 
+          onclick=${this.toggleFullPreview}></button>
 
 
 
@@ -215,14 +247,15 @@ style=${"display:" + ( this.props.disable.indexOf("fullscreen")!=-1 ? "none" : "
          <button class="syncScrollToggle ${this.state.syncScroll ? "on" : "off"}" 
          title="Sync preview scroll" onclick=${()=>{ this.setState({syncScroll: !this.state.syncScroll}) }}></button>
 
-       ${ this.props.externalPreview ?  html`<button class="externalPreview" title=${this.props.externalPreviewTitle} onclick=${this.props.externalPreview}></button>` : ""
            
-       }
+       
          <button class="saveButton" title="Save File" onclick=${this.saveFile}></button>
         </div>
       <div class="workArea">
         <div  class="codeJar language-md" ref=${this.codeJarContainer} onscroll=${(e)=>this.syncPreviewScroll()}></div>
-        <div class="preview ${this.props.previewClass}" ref=${this.previewContainer}></div>
+        <div class="preview ${this.props.previewClass}" ref=${this.previewContainer}>
+           <iframe class="previewFrame" ref=${this.previewFrame}></iframe>
+        </div>
       </div>
     </div>`
   }
@@ -230,7 +263,7 @@ style=${"display:" + ( this.props.disable.indexOf("fullscreen")!=-1 ? "none" : "
 
 
 BareMDE.defaultProps = {
-   render: (m)=>`<div style='color:blue'>${m}</div>`,
+   render: (m)=>`<body><div style='color:blue'>${m}</div></body>`,
    onUpdate: (c)=>console.log("Editor updated" ),
    save: (c)=>console.log("Dummy save function" , c.substring(0,200)+"..."),
    content: "write here", //text to display on mount
@@ -238,6 +271,9 @@ BareMDE.defaultProps = {
    modified: false,
    indicateChanges: true,
    previewClass: "markdownPreviewArea",
+   // previewCSS: null,
+   // previewHeadInject: null,
+   // previewHTMLGen: makeHTML, =>render!
    fullScreen: false,
    showPreview: true,
    spellCheck: true,

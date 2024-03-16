@@ -37,7 +37,16 @@ ${ticks}
 
 `
 
-const editor = h(BareMDE , { disable: [] , menuItems: menu ,fullScreen: true ,render: renderMd , content: testString , spellCheck: false , externalPreview: ()=>console.log("external")  });
+const editor = h(BareMDE , { 
+  disable: [] , 
+  menuItems: menu ,
+  fullScreen: true ,
+  render: m=>`<html><head><style>body{background-color: white}</style></head><body>${ renderMd(m) }</body></html> `, 
+  content: testString , 
+  spellCheck: false , 
+  // externalPreview: ()=>console.log("external"),
+  previewCSS:"body{font-family:sans-serif; background-color: white; color: white}",
+  });
 console.log("created" , editor);
 render( editor, document.getElementById("editorTest") );
 console.log("rendered");
