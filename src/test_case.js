@@ -46,7 +46,9 @@ const editor = h(BareMDE , {
   indicateChanges: true,
   modified: true,
   save: ()=>console.log("saved"),
-  render: m=>`<html><head><style>body{background-color: white}</style></head><body>${ renderMd(m) }</body></html> `, 
+  render: m=>`<html><head>
+  <link rel='stylesheet' href='simple.css'>
+  </head><body><main>${ renderMd(m) }</main></body></html> `, 
   content: testString , 
   spellCheck: false , 
   // externalPreview: ()=>console.log("external"),
