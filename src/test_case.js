@@ -37,10 +37,15 @@ ${ticks}
 
 `
 
+var modified = false;
+
 const editor = h(BareMDE , { 
   disable: [] , 
   menuItems: menu ,
   fullScreen: true ,
+  indicateChanges: true,
+  modified: true,
+  save: ()=>console.log("saved"),
   render: m=>`<html><head><style>body{background-color: white}</style></head><body>${ renderMd(m) }</body></html> `, 
   content: testString , 
   spellCheck: false , 

@@ -89,20 +89,20 @@
       margin-right: 6px;
       background-repeat: no-repeat;
       background-position: 4px 4px;
+      background-size: 24px 24px;
       &:hover{
-        border-color: gray;
+        border-color: rgba(255,255,255,0.6);
       }
       &.on{
-        border-color: gray;
+        border-color: rgba(255,255,255,0.3);
       }
-
       &:last-child{
         margin-right: 0;
       }
       &.previewToggle{
-        background-image: url(./icons/side-by-side-min.svg);
+        background-image: url(./icons/preview_FILL0_wght400_GRAD0_opsz24.svg);
         &.on{
-          background-image: url(./icons/no-preview-2.svg);
+          // background-image: url(./icons/no-preview-3.svg);
         }
       }
       &.fullscreenToggle{
@@ -119,6 +119,9 @@
       }
       &.externalPreview{
         background-image: url(./icons/visibility_FILL0_wght400_GRAD0_opsz24.svg);
+        &.on{
+        background-image: url(./icons/preview_big_on_min.svg);
+        }
       }
       &.saveButton{
         background-image: url(./icons/save_white.svg);

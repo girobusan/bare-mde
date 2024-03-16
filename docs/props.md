@@ -28,12 +28,14 @@ Current content id, for example, file name. Change of content Id initiates redra
 modified
 ----------
 
-Initial value for modified flag. Default = false.
+Value for modified flag. Upper level component may track changes and set this flag accordingly. When `modified=true`, save button is highlighted. 
+
+Default = false.
 
 indicateChanges
 ---------------
 
-Indicate changes in menu or not. Default = true.
+Reserved for planned feature.
 
 previewClass
 --------------
