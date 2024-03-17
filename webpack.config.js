@@ -19,7 +19,7 @@ const econfig = {
 
 module.exports = function (env, argv) {
 
-  let builddir = argv.mode== 'production' ? 'dist' : 'test';
+  let builddir = argv.mode== 'production' ? 'docs' : 'test';
 
   return {
     //externals: ["fs"],
@@ -33,10 +33,10 @@ module.exports = function (env, argv) {
 
     mode: argv.mode,
     entry: {
-      "testcase": './src/test_case.js',
+      "demo": './src/demo.js',
     },
     devtool: argv.mode != "production" ? 'inline-source-map' : false, 
-    devServer: argv.mode != "production" ? {contentBase: 'dist'} : {contentBase: 'test'},
+    devServer: argv.mode != "production" ? {contentBase: 'docs'} : {contentBase: 'test'},
 
     output: {
     //   filename: '[name].js',
@@ -81,17 +81,17 @@ module.exports = function (env, argv) {
       //   filename: "[name].css",
       //   chunkFilename: "[id].css"
       // }),
-      new HtmlWebpackPlugin({
+      // new HtmlWebpackPlugin({
 
-        chunks: ["testcase"],
-        filename: 'index.html',
-        minify: false,
-        inject: "body",
-        css: coreCSS,
-        // scriptLoading: 'defer',
-        template: path.join(__dirname, "src/index.ejs"),
-      }
-      ),
+      //   chunks: ["testcase"],
+      //   filename: 'index.html',
+      //   minify: false,
+      //   inject: "body",
+      //   css: coreCSS,
+      //   // scriptLoading: 'defer',
+      //   template: path.join(__dirname, "src/index.ejs"),
+      // }
+      // ),
       // new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/loader/]),
       // new HTMLInlineCSSWebpackPlugin(
 

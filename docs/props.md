@@ -95,3 +95,8 @@ menuTitle
 
 Title for menu button. Default = "Additional functions"
 
+maxHeight
+---------
+
+CSS value for maximum editor height. Default = "400px"
+

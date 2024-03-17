@@ -65,9 +65,9 @@ export class BareMDE extends Component{
     } else{
       console.log("Update JAR") 
       this.jar.updateCode(this.props.content); //???
-      this.doPreview();
 
     }
+      this.doPreview(true);
     
   }
   componentWillUnmount(){
@@ -134,6 +134,7 @@ export class BareMDE extends Component{
       );
     }
     doScroll()
+
     window.setTimeout( ()=>{ this.scrollThrottled=false ; doScroll() } , 100 );
 
   }
@@ -151,6 +152,7 @@ export class BareMDE extends Component{
      if(v){ this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex }
      else{ this.componentContainer.current.style.zIndex = "unset"}
      this.setState({fullscreen: v});
+     // this.doPreview();
   }
   togglePreview(){
      
@@ -162,7 +164,7 @@ export class BareMDE extends Component{
        return;
      }
      this.setState(ns);
-     v && this.doPreview(true);
+     // v && this.doPreview(true);
   }
   toggleFullPreview(){
     
@@ -171,7 +173,7 @@ export class BareMDE extends Component{
     } 
      const v = !this.state.fullPreview;
      this.setState({fullPreview: v});
-     this.doPreview();
+     // this.doPreview();
   }
   saveFile(){
     typeof this.props.save==='function' && this.props.save(this.jar.toString());
@@ -202,13 +204,13 @@ export class BareMDE extends Component{
         frameDoc.documentElement.offsetHeight,
         // this.previewContainer.current.getBoundingClientRect().height
       )
-      // console.log(
+       // console.log(
 
-      //   frameDoc.body.scrollHeight,
-      //   frameDoc.body.offsetHeight,
-      //   frameDoc.documentElement.scrollHeight,
-      //   frameDoc.documentElement.offsetHeight,
-      // )
+       //   frameDoc.body.scrollHeight,
+       //   frameDoc.body.offsetHeight,
+       //   frameDoc.documentElement.scrollHeight,
+       //   frameDoc.documentElement.offsetHeight,
+       // )
       this.previewFrame.current.style.height = dHeight+"px";
       this.syncPreviewScroll();
     }
@@ -238,6 +240,7 @@ export class BareMDE extends Component{
        ${ this.state.fullPreview ? 'fullPreview' : '' }
        "
        ref=${this.componentContainer}
+       style="max-height:${ this.state.fullscreen ? '100%' : this.props.maxHeight};z-index:${ this.state.fullscreen ? this.props.fullscreenZIndex : "initial" }"
     >
       <div class="toolbar top 
        ${ this.state.fullscreen ? 'fullscreen' : 'windowed' }
@@ -246,6 +249,8 @@ export class BareMDE extends Component{
       ">
          <${Menu} 
          title=${this.props.menuTitle || "Additional functions"}
+         zIndex=${this.state.fullscreen ? this.props.fullscreenZIndex+100 : "initial"}
+         
          items=${this.props.menuItems}/>
 
          <button 
@@ -326,6 +331,7 @@ BareMDE.defaultProps = {
    externalPreview: null,
    externalPreviewTitle: null,
    imageRewriter: null,
+   maxHeight: '400px',
    disable: []
 
 }

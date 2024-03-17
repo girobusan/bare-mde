@@ -44,7 +44,7 @@ export class Menu extends Component{
     title=${this.props.title || "Menu"}
     onClick=${(e)=>{  e.stopPropagation() ; e.preventDefault(); this.setState({ open: !this.state.open }) }}></button>
     <${If} condition=${this.state.open}>
-    <div class="menuItems">
+    <div class="menuItems" style="z-index:${this.props.zIndex}">
     ${ this.props.items.map( 
     (e,i)=>html`<div class="Item" onMouseDown=${ ()=>my.handleItem(i) }>${e.label}</div>` 
     ) }
