@@ -200,7 +200,7 @@ export class BareMDE extends Component{
         frameDoc.body.offsetHeight,
         frameDoc.documentElement.scrollHeight,
         frameDoc.documentElement.offsetHeight,
-        this.previewContainer.current.getBoundingClientRect().height
+        // this.previewContainer.current.getBoundingClientRect().height
       )
       // console.log(
 
@@ -300,7 +300,7 @@ export class BareMDE extends Component{
               <div 
               class="preview ${this.props.previewClass}" 
               ref=${this.previewContainer}>
-                  <iframe class="previewFrame" ref=${this.previewFrame}>
+                  <iframe style="min-height:100%" ref=${this.previewFrame}>
                   </iframe>
               </div>
 
