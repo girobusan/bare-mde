@@ -1,8 +1,5 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const InlineChunkHtmlPlugin = require('react-dev-utils/InlineChunkHtmlPlugin');
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-// const HTMLInlineCSSWebpackPlugin = require("html-inline-css-webpack-plugin").default;
+const CopyPlugin = require("copy-webpack-plugin");
 const webpack = require('webpack');
 const pkg = require('./package.json');
 const fs = require('fs');
@@ -22,7 +19,6 @@ module.exports = function (env, argv) {
   let builddir = argv.mode== 'production' ? 'docs' : 'test';
 
   return {
-    //externals: ["fs"],
     watch: argv.mode != 'production',
     target: 'web',
     optimization: {
@@ -73,40 +69,17 @@ module.exports = function (env, argv) {
 
     },
     plugins: [
+new CopyPlugin({
+      patterns: [
+        { from: "src/demo_html/*.*" , to( {context , absoluteFilename} ){
+           return "[name][ext]"
+        } },
+      ],
+    }),
       new webpack.DefinePlugin({
         // Definitions...
         'VERSION': JSON.stringify(pkg.version)
       }),
-      // new MiniCssExtractPlugin({
-      //   filename: "[name].css",
-      //   chunkFilename: "[id].css"
-      // }),
-      // new HtmlWebpackPlugin({
-
-      //   chunks: ["testcase"],
-      //   filename: 'index.html',
-      //   minify: false,
-      //   inject: "body",
-      //   css: coreCSS,
-      //   // scriptLoading: 'defer',
-      //   template: path.join(__dirname, "src/index.ejs"),
-      // }
-      // ),
-      // new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/loader/]),
-      // new HTMLInlineCSSWebpackPlugin(
-
-      //   {
-      //     filter: (n)=>{console.log("NAME" , n) ; return n!=="editor.css"},
-      //     leaveCSSFile: true,
-      //     replace:
-      //     {target: '<style id="customCSS">' , 
-      //       position: "before",
-      //       removeTarget: false,
-      //     },
-      //     styleTagFactory({ style }){ return `<style id="coreCSS">${ style }</style>`
-      //     },
-      //   }
-      // ),
 
 
     ],
