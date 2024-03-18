@@ -295,20 +295,15 @@ export class BareMDE extends Component{
         </div>
 
          <div class="workArea">
-
-              <div  
+         <div  
               class="codeJar language-md" 
               ref=${this.codeJarContainer} 
               onscroll=${(e)=>this.syncPreviewScroll()}>
               </div>
-
               <div 
               class="preview ${this.props.previewClass}" 
-              ref=${this.previewContainer}>
-                  <iframe style="min-height:100%" ref=${this.previewFrame}>
-                  </iframe>
+              ref=${this.previewContainer}><iframe style="min-height:100%" ref=${this.previewFrame}></iframe>
               </div>
-
       </div>
     </div>`
   }
