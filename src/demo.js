@@ -45,7 +45,7 @@ function MDEDemo(){
    )
    const onChangeFn = useCallback( ()=>!modified && setModified(true) );
    return html`
-   <div class="Demo" style="max-height:400px;border-radius:4px;overflow:hidden">
+   <div class="Demo" style="border-radius:4px; overflow:hidden;max-width:initial">
    <${BareMDE}  
    save=${saveFn}
    content=${ testString }  

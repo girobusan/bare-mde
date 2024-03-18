@@ -14,7 +14,23 @@
   <meta name="twitter:image" content="">
   <link rel="icon" type="image/png" href="">
   <link id = "viewCSS" rel="stylesheet" href="style.css">
-  <style id="customCSS">
+  <style id="customCSS">#editorTest{
+
+min-height: 32px;
+min-width: 100%;
+min-width: 600px;
+max-width: initial;
+
+background-color: transparent;
+margin: 0 -100px;
+width: calc( 100% + 200px);
+}
+
+@media(max-width:800px){
+#editorTest{
+    width:100%;
+     margin: 0 auto;
+}
   
   </style>
   <script>
@@ -25,7 +41,7 @@
   "icon": "",
   "filename": "index.html",
   "footer": "&lt;small&gt;Powered by &lt;a href='https://github.com/girobusan/imp'&gt;IMP!&lt;/a&gt; and &lt;a href='https://matejlatin.github.io/Gutenberg/'&gt;Gutenberg CSS&lt;/a&gt;&lt;/small&gt;",
-  "css": "\n  ",
+  "css": "#editorTest{\n\nmin-height: 32px;\nmin-width: 100%;\nmin-width: 600px;\nmax-width: initial;\n\nbackground-color: transparent;\nmargin: 0 -100px;\nwidth: calc( 100% + 200px);\n}\n\n@media(max-width:800px){\n#editorTest{\n    width:100%;\n     margin: 0 auto;\n}\n  ",
   "headHTML": "&lt;script src=\"demo.js\" defer &gt;&lt;/script&gt;",
   "editor": "",
   "viewCSS": "",
@@ -70,10 +86,12 @@
   <script src="demo.js" defer ></script>
 </head>
 <body>
-<main class='container'><h1>Bare 🐻 MDE Demo</h1>
+<main class='container'><h1>🐻 Bare  MDE Demo</h1>
+<p>This is a demo for Bare MDE Preact component.</p>
 <div id="editorTest" style="max-height: 400px"> </div></main>
 <footer id="pageFooter"><small>Powered by <a href='https://github.com/girobusan/imp'>IMP!</a> and <a href='https://matejlatin.github.io/Gutenberg/'>Gutenberg CSS</a></small></footer>
-<script id="pageData" type="text/markdown"># Bare :bear: MDE Demo
+<script id="pageData" type="text/markdown"># :bear: Bare  MDE Demo
+This is a demo for Bare MDE Preact component.
 
 &lt;div id="editorTest" style="max-height: 400px"&gt; &lt;/div&gt;</script>
 </body>
