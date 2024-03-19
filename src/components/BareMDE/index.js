@@ -39,7 +39,7 @@ export class BareMDE extends Component{
      this.toggleSpellcheck = this.toggleSpellcheck.bind(this);
      this.toggleSyncScroll = this.toggleSyncScroll.bind(this);
      this.doPreview = this.doPreview.bind(this);
-     this.save__File = this.saveFile.bind(this);
+     this.saveFile = this.saveFile.bind(this);
      this.syncPreviewScroll = this.syncPreviewScroll.bind(this);
   }
   shouldComponentUpdate(p , s){
@@ -116,6 +116,7 @@ export class BareMDE extends Component{
     
   }
   async syncPreviewScroll(force){
+    console.log(" s p s ")
     if(!this.state.syncScroll && !force ){ return }
     if(!this.state.showPreview){ return }
     if(this.scrollThrottled){ return }

@@ -55,15 +55,9 @@ function MDEDemo(){
    </div>`
   
 }
-/*
-
-   render=${renderFn} 
-
-   */
-
 
 console.log("about to start...")
-const editor = h( MDEDemo , {});
+const editor = h( BareMDE , {});
 console.log("created" , editor);
 const element = document.querySelector("#editorTest");
 console.log("about to render at" , element);
