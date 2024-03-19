@@ -68,7 +68,7 @@ export class BareMDE extends Component{
     // it means, we have to return cursor
     // to last known position
     if(oldP.content ==this.props.content){ 
-      this.jar.restore(this.pos) ; 
+      this.pos && this.jar.restore(this.pos) ; 
       this.pos = null ; // #FIXME
     } else{
       console.log("Update JAR") 
