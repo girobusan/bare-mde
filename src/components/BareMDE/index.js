@@ -94,11 +94,16 @@ export class BareMDE extends Component{
     );
     this.jar.updateCode(this.props.content);
     this.doPreview();
-    this.jar.onUpdate( ()=>{
+    const updJar =  ()=>{
       this.pos = this.jar.save();
       typeof this.props.onUpdate==='function' && this.props.onUpdate(this.jar.toString());
       this.doPreview();
-    } );
+    } ;
+    // this.jar.updateCode(this.cprops.content);
+    this.jar.onUpdate( updJar );
+    //Chrome bug(?) fix:
+    this.codeJarContainer.current.focus();
+    // updJar();
     window.addEventListener("resize", this.doPreview)
   }
 
@@ -116,7 +121,7 @@ export class BareMDE extends Component{
     
   }
   async syncPreviewScroll(force){
-    console.log(" s p s ")
+    // console.log(" s p s ")
     if(!this.state.syncScroll && !force ){ return }
     if(!this.state.showPreview){ return }
     if(this.scrollThrottled){ return }
@@ -235,13 +240,13 @@ export class BareMDE extends Component{
         frameDoc.documentElement.offsetHeight,
         // this.previewContainer.current.getBoundingClientRect().height
       )
-       console.log(
+       // console.log(
 
-         frameDoc.body.scrollHeight,
-         frameDoc.body.offsetHeight,
-         frameDoc.documentElement.scrollHeight,
-         frameDoc.documentElement.offsetHeight,
-       )
+       //   frameDoc.body.scrollHeight,
+       //   frameDoc.body.offsetHeight,
+       //   frameDoc.documentElement.scrollHeight,
+       //   frameDoc.documentElement.offsetHeight,
+       // )
       this.previewFrame.current.style.height = dHeight+"px";
       this.syncPreviewScroll();
     }
@@ -281,7 +286,6 @@ export class BareMDE extends Component{
          <${Menu} 
          title=${this.props.menuTitle || "Additional functions"}
          zIndex=${this.state.fullscreen ? this.props.fullscreenZIndex+100 : "initial"}
-         
          items=${this.props.menuItems}/>
 
          <button 
@@ -340,48 +344,18 @@ export class BareMDE extends Component{
   }
 }
 
-console.log(BareMDE.prototype);
+// console.log(BareMDE.prototype);
+// Component.prototype.setState_c = Component.prototype.setState;
+// Component.prototype.setState = function( u , c ){ 
+//     console.log("SetState called with" , u , c )
+//     console.log("Next state" , this._nextState)
+//     console.log("vnode" , this._vnode)
+//     this.setState_c( u, c ) 
 
-Component.prototype.setState_c = Component.prototype.setState;
-Component.prototype.setState = function( u , c ){ 
-    console.log("SetState called with" , u , c )
-    console.log("Next state" , this._nextState)
-    console.log("vnode" , this._vnode)
-    this.setState_c( u, c ) 
-
-    }
-
+//     }
 
 
-Component.prototype.setState_ = function(update, callback) {
-	// only clone state when copying to nextState the first time.
-	let s;
-	if (this._nextState != null && this._nextState !== this.state) {
-		s = this._nextState;
-	} else {
-		s = this._nextState = assign({}, this.state); //Obj
-	}
 
-	if (typeof update == 'function') {
-		// Some libraries like `immer` mark the current state as readonly,
-		// preventing us from mutating it, so we need to clone it. See #2716
-		update = update(assign({}, s), this.props);
-	}
-
-	if (update) {
-		assign(s, update);
-	}
-
-	// Skip update if updater function returned null
-	if (update == null) return;
-
-	if (this._vnode) {
-		if (callback) {
-			this._stateCallbacks.push(callback);
-		}
-		enqueueRender(this);
-	}
-};
 
 
 BareMDE.defaultProps = {

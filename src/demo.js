@@ -2,6 +2,7 @@ import "preact/debug";
 import {h, render } from "preact";
 import {html} from "htm/preact";
 import { BareMDE } from "./components/BareMDE";
+// import { BareMDE } from "../test/editor_old_v/BareMDE";
 import { renderMd } from "./mdops";
 import {useCallback , useState} from "preact/hooks";
 const ticks = "```"
@@ -34,7 +35,7 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 `
 
 function MDEDemo(){
-   const [ modified , setModified ]= useState(false);
+   const [ modified , setModified ]= useState(true);
    const saveFn = useCallback(()=>{ setModified(false) ; alert("Save is not implemented in demo") }, [])
    const renderFn = useCallback( 
      m=>`<html><head>
@@ -44,20 +45,21 @@ function MDEDemo(){
    )
    const onChangeFn = useCallback( ()=>!modified && setModified(true) );
    return html`
-   <div class="Demo" style="border-radius:4px; overflow:hidden;max-width:initial">
    <${BareMDE}  
    render=${renderFn} 
    save=${saveFn}
    content=${ testString }  
-   modified=${ modified }
+   modified=${ true }
    onUpdate=${onChangeFn}
    menuItems=${ menu }/>
-   </div>`
+   `
   
 }
 
 console.log("about to start...")
-const editor = h( BareMDE , {});
+const editor = h( MDEDemo , { 
+  });
+
 console.log("created" , editor);
 const element = document.querySelector("#editorTest");
 console.log("about to render at" , element);

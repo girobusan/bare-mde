@@ -186,7 +186,7 @@
       &::-webkit-scrollbar-track{
         background: #dddddd;
       }
-      &::-webkit-scrollbar-thumb{
+      &::-webkit-scrollbar-thumb {
         background-color: black;
         border-radius: 4px;
       }
@@ -196,9 +196,9 @@
       border-bottom-left-radius: 0;
       font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', ui-monospace , monospace;
 
-      ::spelling-error{
-        background-color: yellow;
-      }
+      // ::spelling-error{
+      //   background-color: yellow;
+      // }
       font-size: 18px;
       line-height: 150%;
       color: #333;
