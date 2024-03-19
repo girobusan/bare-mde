@@ -1,4 +1,3 @@
-// Must be the first import
 import "preact/debug";
 import {h, render } from "preact";
 import {html} from "htm/preact";
@@ -47,15 +46,20 @@ function MDEDemo(){
    return html`
    <div class="Demo" style="border-radius:4px; overflow:hidden;max-width:initial">
    <${BareMDE}  
+   render=${renderFn} 
    save=${saveFn}
    content=${ testString }  
-   render=${renderFn} 
    modified=${ modified }
    onUpdate=${onChangeFn}
    menuItems=${ menu }/>
    </div>`
   
 }
+/*
+
+   render=${renderFn} 
+
+   */
 
 
 console.log("about to start...")

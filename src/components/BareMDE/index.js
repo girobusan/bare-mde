@@ -1,4 +1,4 @@
-import { Component, createRef } from "preact";
+import { Component, createRef , enqueueRender as ER } from "preact";
 import {html} from "htm/preact";
 
 import {CodeJar} from "codejar";
@@ -8,11 +8,17 @@ const Prism =  require("./prism/prism.js")
 
 import { Menu } from "./Menu";
 
+function assign(obj, props) {
+	// @ts-expect-error We change the type of `obj` to be `O & P`
+	for (let i in props) obj[i] = props[i];
+	return /** @type {O & P} */ (obj);
+}
+
 
 export class BareMDE extends Component{
   constructor(props){
      super(props);
-     this.previewThrottle = false;
+     this.previewThrottled = false;
      this.scrollThrottled = false;
      this.componentContainer = createRef();
      this.codeJarContainer = createRef();
@@ -31,8 +37,9 @@ export class BareMDE extends Component{
      this.toggleFullPreview = this.toggleFullPreview.bind(this);
      this.toggleFullscreen = this.toggleFullscreen.bind(this);
      this.toggleSpellcheck = this.toggleSpellcheck.bind(this);
+     this.toggleSyncScroll = this.toggleSyncScroll.bind(this);
      this.doPreview = this.doPreview.bind(this);
-     this.saveFile = this.saveFile.bind(this);
+     this.save__File = this.saveFile.bind(this);
      this.syncPreviewScroll = this.syncPreviewScroll.bind(this);
   }
   shouldComponentUpdate(p , s){
@@ -54,6 +61,7 @@ export class BareMDE extends Component{
   }
 
   compomemtDidUpdate(oldS , oldP){
+     // console.log("Component updated")
     // console.log("Bare MDE updated" , this.jar.save())
     // if component updated,
     // but text is not,
@@ -67,6 +75,7 @@ export class BareMDE extends Component{
       this.jar.updateCode(this.props.content); //???
 
     }
+     console.log("Component Did Update")
       this.doPreview(true);
     
   }
@@ -106,7 +115,7 @@ export class BareMDE extends Component{
     return t;
     
   }
-  syncPreviewScroll(force){
+  async syncPreviewScroll(force){
     if(!this.state.syncScroll && !force ){ return }
     if(!this.state.showPreview){ return }
     if(this.scrollThrottled){ return }
@@ -138,6 +147,7 @@ export class BareMDE extends Component{
     window.setTimeout( ()=>{ this.scrollThrottled=false ; doScroll() } , 100 );
 
   }
+  
 
   toggleSpellcheck(){
 
@@ -147,11 +157,18 @@ export class BareMDE extends Component{
   }
 
   toggleFullscreen(){
-     // console.log("Toggle fullscreen");
+     console.log("Toggle fullscreen");
      const v = !this.state.fullscreen;
      if(v){ this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex }
      else{ this.componentContainer.current.style.zIndex = "unset"}
-     this.setState({fullscreen: v});
+     try {
+     console.log("about to set state");
+        this.setState({fullscreen: v});
+     console.log("state set");
+
+     }catch(e){
+       console.error("Error found!" , e);
+     }
      // this.doPreview();
   }
   togglePreview(){
@@ -172,20 +189,33 @@ export class BareMDE extends Component{
         return this.props.externalPreview();
     } 
      const v = !this.state.fullPreview;
-     this.setState({fullPreview: v});
+     // console.log("about to set state..." , this.state)
+     this.setState({fullPreview: v}); //.catch(e=>console.error("catched!"));
+     // console.log("state is set^" , this.state);
      // this.doPreview();
+  }
+  toggleSyncScroll(){
+     
+     const v = !this.state.syncScroll;
+     const ns = {syncScroll: v}
+     this.setState(ns);
   }
   saveFile(){
     typeof this.props.save==='function' && this.props.save(this.jar.toString());
   }
-  doPreview(force){
+  async doPreview(force){
     //if preview is hidden and we do not forced to update it, return
-    if(!this.state.showPreview&&!force){ return }
+    if(!this.state.showPreview&&!force){  return }
+    if(!this.previewFrame.current){ console.log("no iframe") ;console.log() }
 
     const redraw = ()=>{
+       if(!this.previewFrame.current.contentWindow){ return } 
       const frameDoc = this.previewFrame.current.contentWindow.document;
+      const content =  this.props.render(this.jar.toString());
+      // frameDoc.documentElement.innerHTML = content;
+      // frameDoc.inner;
       frameDoc.open();
-      frameDoc.write( this.props.render(this.jar.toString()) )
+      frameDoc.write(content)
       frameDoc.close();
 
       if(typeof this.props.imageRewriter==='function'){
@@ -204,22 +234,22 @@ export class BareMDE extends Component{
         frameDoc.documentElement.offsetHeight,
         // this.previewContainer.current.getBoundingClientRect().height
       )
-       // console.log(
+       console.log(
 
-       //   frameDoc.body.scrollHeight,
-       //   frameDoc.body.offsetHeight,
-       //   frameDoc.documentElement.scrollHeight,
-       //   frameDoc.documentElement.offsetHeight,
-       // )
+         frameDoc.body.scrollHeight,
+         frameDoc.body.offsetHeight,
+         frameDoc.documentElement.scrollHeight,
+         frameDoc.documentElement.offsetHeight,
+       )
       this.previewFrame.current.style.height = dHeight+"px";
       this.syncPreviewScroll();
     }
 
-    if(!this.previewThrottle){
+    if(!this.previewThrottled){
       // console.log("previewing...");
       redraw();
-      this.previewThrottle = true;
-      window.setTimeout(()=>{ this.previewThrottle=false; redraw()} , 300);
+      this.previewThrottled = true;
+      window.setTimeout(()=>{ this.previewThrottled=false; redraw()} , 300);
 
     }
   }
@@ -283,7 +313,7 @@ export class BareMDE extends Component{
          <button 
          class="syncScrollToggle ${this.state.syncScroll ? "on" : "off"}" 
          title="Sync preview scroll" 
-         onclick=${()=>{ this.setState({syncScroll: !this.state.syncScroll}) }}>
+         onclick=${this.toggleSyncScroll}>
          </button>
 
          <button 
@@ -308,6 +338,49 @@ export class BareMDE extends Component{
     </div>`
   }
 }
+
+console.log(BareMDE.prototype);
+
+Component.prototype.setState_c = Component.prototype.setState;
+Component.prototype.setState = function( u , c ){ 
+    console.log("SetState called with" , u , c )
+    console.log("Next state" , this._nextState)
+    console.log("vnode" , this._vnode)
+    this.setState_c( u, c ) 
+
+    }
+
+
+
+Component.prototype.setState_ = function(update, callback) {
+	// only clone state when copying to nextState the first time.
+	let s;
+	if (this._nextState != null && this._nextState !== this.state) {
+		s = this._nextState;
+	} else {
+		s = this._nextState = assign({}, this.state); //Obj
+	}
+
+	if (typeof update == 'function') {
+		// Some libraries like `immer` mark the current state as readonly,
+		// preventing us from mutating it, so we need to clone it. See #2716
+		update = update(assign({}, s), this.props);
+	}
+
+	if (update) {
+		assign(s, update);
+	}
+
+	// Skip update if updater function returned null
+	if (update == null) return;
+
+	if (this._vnode) {
+		if (callback) {
+			this._stateCallbacks.push(callback);
+		}
+		enqueueRender(this);
+	}
+};
 
 
 BareMDE.defaultProps = {
