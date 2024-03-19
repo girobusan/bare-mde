@@ -179,7 +179,7 @@
       max-width: 100%;
       margin: 0;
       scrollbar-width: thin;
-      scrollbar-color: black #dddddd;
+      scrollbar-color: #444 #dddddd;
       &::-webkit-scrollbar{
         width: 4px;
       }
@@ -187,8 +187,10 @@
         background: #dddddd;
       }
       &::-webkit-scrollbar-thumb {
-        background-color: black;
+        background-color: #444;
         border-radius: 4px;
+        -webkit-border-radius: 4px;
+        overflow: hidden;
       }
     }
 
