@@ -20,6 +20,7 @@ export class BareMDE extends Component{
      super(props);
      this.previewThrottled = false;
      this.scrollThrottled = false;
+     this.saveThrottled = false;
      this.componentContainer = createRef();
      this.codeJarContainer = createRef();
      this.previewContainer = createRef();
@@ -99,11 +100,10 @@ export class BareMDE extends Component{
       typeof this.props.onUpdate==='function' && this.props.onUpdate(this.jar.toString());
       this.doPreview();
     } ;
-    // this.jar.updateCode(this.cprops.content);
+    //updJar = updJar.bind(this);
     this.jar.onUpdate( updJar );
-    //Chrome bug(?) fix:
+    //Chrome bug(?) fix (?):
     this.codeJarContainer.current.focus();
-    // updJar();
     window.addEventListener("resize", this.doPreview)
   }
 
@@ -163,7 +163,7 @@ export class BareMDE extends Component{
   }
 
   toggleFullscreen(){
-     console.log("Toggle fullscreen");
+     // console.log("Toggle fullscreen");
      const v = !this.state.fullscreen;
      if(v){ this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex }
      else{ this.componentContainer.current.style.zIndex = "unset"}
@@ -195,8 +195,7 @@ export class BareMDE extends Component{
         return this.props.externalPreview();
     } 
      const v = !this.state.fullPreview;
-     // console.log("about to set state..." , this.state)
-     this.setState({fullPreview: v}); //.catch(e=>console.error("catched!"));
+     this.setState({fullPreview: v}); 
      // console.log("state is set^" , this.state);
      // this.doPreview();
   }
@@ -207,7 +206,13 @@ export class BareMDE extends Component{
      this.setState(ns);
   }
   saveFile(){
-    typeof this.props.save==='function' && this.props.save(this.jar.toString());
+    if(this.saveThrottled){ return }
+    if( typeof this.props.save==='function' ){
+      this.props.save(this.jar.toString()) 
+      this.saveThrottled = true;
+      window.setTimeout(()=>{ this.saveThrottled=false } , 500);
+    };
+
   }
   async doPreview(force){
     //if preview is hidden and we do not forced to update it, return
@@ -219,7 +224,6 @@ export class BareMDE extends Component{
       const frameDoc = this.previewFrame.current.contentWindow.document;
       const content =  this.props.render(this.jar.toString());
       // frameDoc.documentElement.innerHTML = content;
-      // frameDoc.inner;
       frameDoc.open();
       frameDoc.write(content)
       frameDoc.close();
@@ -238,7 +242,6 @@ export class BareMDE extends Component{
         frameDoc.body.offsetHeight,
         frameDoc.documentElement.scrollHeight,
         frameDoc.documentElement.offsetHeight,
-        // this.previewContainer.current.getBoundingClientRect().height
       )
        // console.log(
 
@@ -252,7 +255,6 @@ export class BareMDE extends Component{
     }
 
     if(!this.previewThrottled){
-      // console.log("previewing...");
       redraw();
       this.previewThrottled = true;
       window.setTimeout(()=>{ this.previewThrottled=false; redraw()} , 300);
@@ -333,7 +335,7 @@ export class BareMDE extends Component{
          <div  
               class="codeJar language-md" 
               ref=${this.codeJarContainer} 
-              onscroll=${(e)=>this.syncPreviewScroll()}>
+              onscroll=${()=>this.syncPreviewScroll()}>
               </div>
               <div 
               class="preview ${this.props.previewClass}" 
@@ -343,19 +345,6 @@ export class BareMDE extends Component{
     </div>`
   }
 }
-
-// console.log(BareMDE.prototype);
-// Component.prototype.setState_c = Component.prototype.setState;
-// Component.prototype.setState = function( u , c ){ 
-//     console.log("SetState called with" , u , c )
-//     console.log("Next state" , this._nextState)
-//     console.log("vnode" , this._vnode)
-//     this.setState_c( u, c ) 
-
-//     }
-
-
-
 
 
 BareMDE.defaultProps = {
