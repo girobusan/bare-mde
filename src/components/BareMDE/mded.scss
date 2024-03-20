@@ -32,23 +32,28 @@
   }
   .toolbar{
     all: unset;
+    position: relative;
     margin: 0;
     box-sizing: border-box;
     // margin: -1px -1px 0 -1px;
     border-radius: 0;
-    background-color: #223  ;
+    background-color: #444  ;
     color: white;
     padding: 6px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
     text-align: center;
     flex-grow: 0;
     .EditorMenu{
-      float: left;
-      position: relative;
+      position: absolute;
+      left: 6px;
       width: 32px;
       height: 32px;
       text-align: left;
       margin: 0;
       button{
+        display:block;
         border: none;
         width: 32px;
         height: 32px;
@@ -110,7 +115,7 @@
       cursor: pointer;
       margin-right: 6px;
       background-repeat: no-repeat;
-      background-position: 4px 4px;
+      background-position: center center;
       background-size: 24px 24px;
       &:hover{
         border-color: rgba(255,255,255,0.6);
