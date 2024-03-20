@@ -96,6 +96,7 @@
     }
     &.modified button.saveButton{
       background-color: orangered;
+      border: none;
       &:hover{
         border-color: transparent;
       }
