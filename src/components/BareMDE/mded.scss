@@ -34,6 +34,7 @@
     all: unset;
     position: relative;
     margin: 0;
+    height: 44px;
     box-sizing: border-box;
     // margin: -1px -1px 0 -1px;
     border-radius: 0;
@@ -247,7 +248,7 @@
     .codeJar{
       display: none;
     }
-    .preview{
+    .WorkArea .preview{
       display: block;
       width: 100%;
       max-width: 100%;
