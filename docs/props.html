@@ -81,8 +81,8 @@
 <h3>contentId</h3>
 <p>Current content id, for example, file name. Change of content Id initiates redraw. May be omitted.</p>
 <h3>modified</h3>
-<p>Value for modified flag. Upper level component may track changes and set this flag accordingly. When <code>modified=true</code>, save button is highlighted.</p>
-<p>Default = false.</p>
+<p>Value for modified flag. Upper level component may track changes and set this flag accordingly. When <code>modified=true</code>, save button is highlighted.
+Default = false.</p>
 <h3>indicateChanges</h3>
 <p>Reserved for planned feature.</p>
 <h3>previewClass</h3>
@@ -104,7 +104,7 @@
 <h3>menuItems</h3>
 <p>Optional array of items for drop-down menu. If not present, menu is not shown.</p>
 <pre><code class="language-javascript">items=[
-   { <span class="hljs-attr">label</span>: <span class="hljs-string">&quot;Label&quot;</span> , 
+   { <span class="hljs-string">&quot;label&quot;</span> : <span class="hljs-string">&quot;Label for menu item&quot;</span> , 
 	 <span class="hljs-string">&quot;handler&quot;</span> : <span class="hljs-function">()=&gt;</span><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;click&quot;</span>) },
    ...
 ]
@@ -142,7 +142,6 @@ Current content id, for example, file name. Change of content Id initiates redra
 ### modified
 
 Value for modified flag. Upper level component may track changes and set this flag accordingly. When `modified=true`, save button is highlighted. 
-
 Default = false.
 
 ### indicateChanges
@@ -187,7 +186,7 @@ Optional array of items for drop-down menu. If not present, menu is not shown.
 
 ```javascript
 items=[
-   { label: "Label" , 
+   { "label" : "Label for menu item" , 
 	 "handler" : ()=&gt;console.log("click") },
    ...
 ]
