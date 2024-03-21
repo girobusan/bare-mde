@@ -6,3 +6,5 @@ window.BareMDE = function( props , element ){
   const e = h(BareMDE , props  );
   render( e , element )
 }
+
+console.log("BMDE window" , window)

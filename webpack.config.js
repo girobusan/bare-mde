@@ -30,7 +30,7 @@ module.exports = function (env, argv) {
     mode: argv.mode,
     entry: {
       "demo": './src/demo.js',
-      "web":{import:  './src/baremde_web' , filename: builddir=='docs' ? '../dist/baremde_web.js' : '../test/baremde_web.js' },
+      "baremde_web":{import:  './src/baremde_web'}// , filename: builddir=='docs' ? '../dist/baremde_web.js' : '../test/baremde_web.js' },
     },
     devtool: argv.mode != "production" ? 'inline-source-map' : false, 
     devServer: argv.mode != "production" ? {contentBase: 'docs'} : {contentBase: 'test'},
