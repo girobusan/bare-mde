@@ -6,7 +6,7 @@ require("./prism/prism_fixed.scss");
 require("./mded.scss")
 const Prism =  require("./prism/prism.js")
 
-import { Menu } from "./Menu";
+import Menu from "./Menu";
 
 function assign(obj, props) {
 	// @ts-expect-error We change the type of `obj` to be `O & P`
@@ -15,7 +15,7 @@ function assign(obj, props) {
 }
 
 
-export class BareMDE extends Component{
+export default class BareMDE extends Component{
   constructor(props){
      super(props);
      this.previewThrottled = false;

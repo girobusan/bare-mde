@@ -1,7 +1,7 @@
 import "preact/debug";
 import {h, render } from "preact";
 import {html} from "htm/preact";
-import { BareMDE } from "./components/BareMDE";
+import BareMDE from "./components/BareMDE";
 // import { BareMDE } from "../test/editor_old_v/BareMDE";
 import { renderMd } from "./mdops";
 import {useCallback , useState} from "preact/hooks";

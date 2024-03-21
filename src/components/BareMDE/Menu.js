@@ -3,7 +3,7 @@ import {html} from "htm/preact";
 import { If } from "./If";
 
 
-export class Menu extends Component{
+export default class Menu extends Component{
   constructor(props){
     super(props);
     this.state = {
