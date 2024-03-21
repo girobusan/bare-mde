@@ -8,13 +8,6 @@ const Prism =  require("./prism/prism.js")
 
 import Menu from "./Menu";
 
-function assign(obj, props) {
-	// @ts-expect-error We change the type of `obj` to be `O & P`
-	for (let i in props) obj[i] = props[i];
-	return /** @type {O & P} */ (obj);
-}
-
-
 export default class BareMDE extends Component{
   constructor(props){
      super(props);
@@ -72,11 +65,11 @@ export default class BareMDE extends Component{
       this.pos && this.jar.restore(this.pos) ; 
       this.pos = null ; // #FIXME
     } else{
-      console.log("Update JAR") 
+      // console.log("Update JAR") 
       this.jar.updateCode(this.props.content); //???
 
     }
-     console.log("Component Did Update")
+     // console.log("Component Did Update")
       this.doPreview(true);
     
   }
@@ -100,7 +93,6 @@ export default class BareMDE extends Component{
       typeof this.props.onUpdate==='function' && this.props.onUpdate(this.jar.toString());
       this.doPreview();
     } ;
-    //updJar = updJar.bind(this);
     this.jar.onUpdate( updJar );
     //Chrome bug(?) fix (?):
     this.codeJarContainer.current.focus();
@@ -121,7 +113,6 @@ export default class BareMDE extends Component{
     
   }
   async syncPreviewScroll(force){
-    // console.log(" s p s ")
     if(!this.state.syncScroll && !force ){ return }
     if(!this.state.showPreview){ return }
     if(this.scrollThrottled){ return }
@@ -210,7 +201,7 @@ export default class BareMDE extends Component{
     if( typeof this.props.save==='function' ){
       this.props.save(this.jar.toString()) 
       this.saveThrottled = true;
-      window.setTimeout(()=>{ this.saveThrottled=false } , 500);
+      window.setTimeout(()=>{ this.saveThrottled=false } , 200);
     };
 
   }

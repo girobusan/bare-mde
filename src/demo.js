@@ -6,19 +6,23 @@ import BareMDE from "./components/BareMDE";
 import { renderMd } from "./mdops";
 import {useCallback , useState} from "preact/hooks";
 const ticks = "```"
+
 const menu = [ 
    { "label": "test menu items" , "handler": ()=>alert("Menu item clicked") },
    { "label": "test2" , "handler": ()=>alert("Menu item2 clicked") },
    ]
 const testString = `
-This is a heading
-==================
+# Why another web editor for markdown?
 
-* list item
-*  ~~Removed list item~~
-* [Link to site](https://github.com)
-  1. Nubered list item
-  1. Two of them
+1. First, I do not want "pseudo-preview" in editor window. 
+I like something, which looks more like code editor with
+minimal highlighting.
+1. But preview pane must be _perfect_, and will look _exactly_
+like rendered page.
+1. Last, but not least, the editor must be as light as possible.
+
+That's why.
+
 
 Lorem Ipsum
 -----------
@@ -30,8 +34,6 @@ Lorem ipsum __dolor sit__ amet, consectetur adipiscing elit, sed do eiusmod temp
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia [deserunt mollit](https://github.com) anim id est laborum.
 
 ---
-
-## Then...
 `
 
 function MDEDemo(){
