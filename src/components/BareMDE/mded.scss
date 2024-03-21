@@ -242,14 +242,15 @@
   &.noPreview{
     .preview{
       display: none;
+      position: relative;
     }
   }
   &.fullPreview{
     .codeJar{
       display: none;
     }
-    .WorkArea .preview{
-      display: block;
+    .workArea .preview{
+      display: block !important;
       width: 100%;
       max-width: 100%;
       iframe{
