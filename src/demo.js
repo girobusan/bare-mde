@@ -11,15 +11,16 @@ const menu = [
    { "label": "test menu items" , "handler": ()=>alert("Menu item clicked") },
    { "label": "test2" , "handler": ()=>alert("Menu item2 clicked") },
    ]
-const testString = `
-# Why another web editor for markdown?
+const testString = `# Why another web editor for markdown?
 
-1. First, I do not want "pseudo-preview" in editor window. 
-I like something, which looks more like code editor with
-minimal highlighting.
-1. But preview pane must be _perfect_, and will look _exactly_
-like rendered page.
-1. Last, but not least, the editor must be as light as possible.
+1. First, I do not want "pseudo-preview"  
+in editor window. I like something, which 
+looks more like code editor with minimal 
+highlighting.
+1. But preview pane must be _perfect_, and 
+look _exactly_ like rendered page.
+1. Last, but not least, the editor 
+must be as light as possible.
 
 That's why.
 

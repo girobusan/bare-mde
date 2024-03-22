@@ -233,7 +233,6 @@ export default class BareMDE extends Component{
        return;
      }
      this.setState(ns);
-     // v && this.doPreview(true);
   }
   toggleFullPreview(){
     
@@ -242,7 +241,6 @@ export default class BareMDE extends Component{
     } 
      const v = !this.state.fullPreview;
      this.setState({fullPreview: v}); 
-     // this.doPreview();
   }
   toggleSyncScroll(){
      
@@ -268,7 +266,7 @@ export default class BareMDE extends Component{
        if(!this.previewFrame.current.contentWindow){ return } 
       const frameDoc = this.previewFrame.current.contentWindow.document;
       const content =  this.props.render(this.jar.toString());
-      // frameDoc.documentElement.innerHTML = content;
+      // frameDoc.documentElement.outerHTML = content;
       frameDoc.open();
       frameDoc.write(content)
       frameDoc.close();
@@ -282,7 +280,7 @@ export default class BareMDE extends Component{
           i.src = this.props.imageRewriter(i.getAttribute( "src" ));
         })
       }
-      const dHeight = Math.max(
+      const dHeight = Math.max( //need more tests in Chrome
         // frameDoc.body.scrollHeight,
         frameDoc.body.offsetHeight,
         frameDoc.documentElement.scrollHeight,
@@ -412,8 +410,6 @@ export default class BareMDE extends Component{
         onClick=${this.saveFile}
         customClass=${ this.props.modified ? "alerted" : "" }
         />
-
-
 
         </div>
 

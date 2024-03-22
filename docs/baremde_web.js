@@ -115,8 +115,6 @@
         customClass=${this.props.modified?"alerted":""}
         />
 
-
-
         </div>
 
          <div class="workArea">

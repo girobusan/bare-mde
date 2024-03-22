@@ -115,8 +115,6 @@
         customClass=${this.props.modified?"alerted":""}
         />
 
-
-
         </div>
 
          <div class="workArea">
@@ -134,7 +132,7 @@
    <${ae}  
    render=${n} 
    save=${r}
-   content=${'\n# Why another web editor for markdown?\n\n1. First, I do not want "pseudo-preview" in editor window. \nI like something, which looks more like code editor with\nminimal highlighting.\n1. But preview pane must be _perfect_, and will look _exactly_\nlike rendered page.\n1. Last, but not least, the editor must be as light as possible.\n\nThat\'s why.\n\n\nLorem Ipsum\n-----------\n\nLorem ipsum __dolor sit__ amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea _commodo_ consequat.\n\n> Ut enim ad minim veniam, quis nostrud exercitation\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia [deserunt mollit](https://github.com) anim id est laborum.\n\n---\n'}  
+   content=${'# Why another web editor for markdown?\n\n1. First, I do not want "pseudo-preview"  \nin editor window. I like something, which \nlooks more like code editor with minimal \nhighlighting.\n1. But preview pane must be _perfect_, and \nlook _exactly_ like rendered page.\n1. Last, but not least, the editor \nmust be as light as possible.\n\nThat\'s why.\n\n\nLorem Ipsum\n-----------\n\nLorem ipsum __dolor sit__ amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea _commodo_ consequat.\n\n> Ut enim ad minim veniam, quis nostrud exercitation\n\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia [deserunt mollit](https://github.com) anim id est laborum.\n\n---\n'}  
    modified=${e}
    onUpdate=${o}
    menuItems=${qe}/>
