@@ -149,7 +149,8 @@ export default class BareMDE extends Component{
     if(!r){ return }
     //chek if selection is inside our editor
     if(
-      this.codeJarContainer.current.contains(r.commonAncestorContainer) 
+      this.codeJarContainer.current.contains(r.commonAncestorContainer) ||
+      this.codeJarContainer.current===r.commonAncestorContainer 
     ){
       console.log(s , r);
       const start = r.startContainer;
