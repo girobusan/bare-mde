@@ -137,6 +137,10 @@ export default class BareMDE extends Component{
     return t;
     
   }
+  insertAt(txt , pos , what){
+    //FIX: if string starts with newline, insert after newline.
+    return txt.substring(0,pos) + what + txt.substring(pos);
+  }
 
   surroundSelection( before , after ){
     const s = window.getSelection();
@@ -145,14 +149,23 @@ export default class BareMDE extends Component{
     if(!r){ return }
     //chek if selection is inside our editor
     if(
-      r.commonAncestorContainer===this.codeJarContainer.current ||
-      r.commonAncestorContainer.parentNode===this.codeJarContainer.current ||
-      r.commonAncestorContainer.parentNode.parentNode===this.codeJarContainer.current 
+      this.codeJarContainer.current.contains(r.commonAncestorContainer) 
     ){
-      const n = document.createElement("span")
-      r.surroundContents(n);
-      n.innerHTML = before + n.innerHTML + after; 
-      n.outerHTML = n.innerHTML;
+      console.log(s , r);
+      const start = r.startContainer;
+      const startOf = r.startOffset;
+      const end = r.endContainer;
+      const endOf = r.endOffset;
+      //
+      start.textContent = this.insertAt(
+         start.textContent, 
+         startOf, 
+         before)
+      end.textContent = this.insertAt(
+         end.textContent, 
+         endOf+before.length, 
+         after)
+      //update editor
       const p = this.jar.save();
       this.jar.updateCode(this.jar.toString());
       this.jar.restore(p);
