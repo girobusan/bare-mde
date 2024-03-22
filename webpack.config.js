@@ -42,9 +42,15 @@ module.exports = function (env, argv) {
 
     module: {
       rules: [
+        {
+          test: /\.svg$/,
+          resourceQuery: /raw/,
+          type: 'asset/source'
+        },
 
         {
           test: /\.svg$/,
+          resourceQuery: { not: [/raw/] },
           type: 'asset/inline'
         },
 

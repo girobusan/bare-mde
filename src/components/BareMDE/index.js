@@ -7,6 +7,30 @@ require("./mded.scss")
 const Prism =  require("./prism/prism.js")
 
 import Menu from "./Menu";
+import TButton from "./TButton";
+//
+//SVGS
+//
+import IconShowPreview from "./icons/preview_FILL0_wght400_GRAD0_opsz24.svg?raw" 
+//full preview
+import IconFPreview from "./icons/preview_big_on_min.svg?raw"
+import IconFPreviewOff from "./icons/visibility_FILL0_wght400_GRAD0_opsz24.svg?raw"
+//fullscreen
+import IconFScreenOff from "./icons/fullscreen_FILL0_wght400_GRAD0_opsz24.svg?raw"
+import IconFScreen from "./icons/fullscreen_exit_FILL0_wght400_GRAD0_opsz24.svg?raw"
+//spellcheck
+import IconSpell from "./icons/spellcheck_active_minified.svg?raw"
+import IconSpellOff from "./icons/spellcheck_FILL1_wght400_GRAD0_opsz24.svg?raw"
+//sync scroll
+import IconSScroll from "./icons/arrows_locked.svg?raw"
+import IconSScrollOff from "./icons/swap_vert_FILL0_wght400_GRAD0_opsz24.svg?raw"
+//save
+import IconSave from "./icons/save_white.svg?raw"
+//formatting
+import IconBold from "./icons/formatting/format_bold_FILL0_wght400_GRAD0_opsz24.svg?raw"
+import IconItalic from "./icons/formatting/format_italic_FILL0_wght400_GRAD0_opsz24.svg?raw"
+import IconLink from "./icons/formatting/link_FILL0_wght400_GRAD0_opsz24.svg?raw"
+import IconStrike from "./icons/formatting/format_strikethrough_FILL0_wght400_GRAD0_opsz24.svg?raw"
 
 export default class BareMDE extends Component{
   constructor(props){
@@ -27,6 +51,7 @@ export default class BareMDE extends Component{
        syncScroll: true,
        modified: props.modified
      }
+     this.surroundSelection = this.surroundSelection.bind(this);
      this.togglePreview = this.togglePreview.bind(this);
      this.toggleFullPreview = this.toggleFullPreview.bind(this);
      this.toggleFullscreen = this.toggleFullscreen.bind(this);
@@ -112,6 +137,34 @@ export default class BareMDE extends Component{
     return t;
     
   }
+
+  surroundSelection( before , after ){
+    const s = window.getSelection();
+    if(s.isCollapsed){ console.error("collapsed selection" ) ; return }
+    const r = s.getRangeAt(0);
+    if(!r){ return }
+    //chek if selection is inside our editor
+    if(
+      r.commonAncestorContainer===this.codeJarContainer.current ||
+      r.commonAncestorContainer.parentNode===this.codeJarContainer.current ||
+      r.commonAncestorContainer.parentNode.parentNode===this.codeJarContainer.current 
+    ){
+      const n = document.createElement("span")
+      r.surroundContents(n);
+      n.innerHTML = before + n.innerHTML + after; 
+      n.outerHTML = n.innerHTML;
+      const p = this.jar.save();
+      this.jar.updateCode(this.jar.toString());
+      this.jar.restore(p);
+      this.doPreview()
+      return;
+    }else{
+      console.error("wrong selection");
+    }
+
+  }
+
+
   async syncPreviewScroll(force){
     if(!this.state.syncScroll && !force ){ return }
     if(!this.state.showPreview){ return }
@@ -281,44 +334,85 @@ export default class BareMDE extends Component{
          zIndex=${this.state.fullscreen ? this.props.fullscreenZIndex+100 : "initial"}
          items=${this.props.menuItems}/>
 
-         <button 
-         class="previewToggle ${this.state.showPreview ? "on" : "off"}" 
+         <${TButton}
+         isOn=${true}
+         customClass="formatting"
+         svg=${IconBold}
+         onClick=${ ()=>this.surroundSelection("**", "**") }
+         />
+
+         <${TButton}
+         customClass="formatting"
+         isOn=${true}
+         svg=${IconItalic}
+         onClick=${ ()=>this.surroundSelection("_", "_") }
+         />
+
+         <${TButton}
+         customClass="formatting"
+         isOn=${true}
+         svg=${IconStrike}
+         onClick=${ ()=>this.surroundSelection("~~", "~~") }
+         />
+
+         <${TButton}
+         customClass="formatting"
+         isOn=${true}
+         svg=${IconLink}
+         onClick=${ ()=>this.surroundSelection("[", "](https://)") }
+         />
+
+         <div class="divider"></div>
+
+
+         <${TButton} 
+         isOn=${this.state.showPreview}
+         svg=${IconShowPreview}
          title="Toggle Preview" 
-         onclick=${this.togglePreview}> 
-         </button>
-
-         <button 
-         class="externalPreview ${this.state.fullPreview? "on" : "off"}" 
-         title=${this.props.externalPreviewTitle || "Only preview"} 
-         onclick=${this.toggleFullPreview}>
-         </button>
+         onClick=${this.togglePreview} 
+         />
 
 
-         <button 
-         class="fullscreenToggle ${this.state.fullscreen? "on" : "off"}" 
-         title="Toggle Fullscreen" 
-         onclick=${this.toggleFullscreen}
-         style=${"display:" + ( this.props.disable.indexOf("fullscreen")!=-1 ? "none" : "" )}
-         >
-         </button>
-         
-         <button 
-         class="spellcheckToggle ${this.state.spellCheck ? "on" : "off"}" 
-         title="Toggle spellcheck" 
-         onclick=${this.toggleSpellcheck}>
-         </button>
+         <${TButton}
+         isOn=${this.state.fullPreview}
+         svg=${IconFPreview}
+         svgOff=${IconFPreviewOff}
+         title=${this.props.externalPreviewTitle || "Full width preview"} 
+         onClick=${this.toggleFullPreview}
+         />
 
-         <button 
-         class="syncScrollToggle ${this.state.syncScroll ? "on" : "off"}" 
-         title="Sync preview scroll" 
-         onclick=${this.toggleSyncScroll}>
-         </button>
+        <${TButton}
+        isOn=${ this.state.fullscreen }
+        svg=${IconFScreen}
+        svgOff=${IconFScreenOff}
+        title=${this.state.fullscreen ? "Exit fullscreen" : "Go fullscreen"}
+        onClick=${this.toggleFullscreen}
+        />
 
-         <button 
-         class="saveButton" 
-         title="Save File" 
-         onclick=${this.saveFile}>
-         </button>
+        <${TButton}
+        isOn=${ this.state.spellCheck }
+        svg=${IconSpell}
+        svgOff=${IconSpellOff}
+        title=${this.state.spellCheck ? "Turn spellchek off" : "Turn spellcheck on"}
+        onClick=${this.toggleSpellcheck}
+        />
+
+        <${TButton}
+        isOn=${ this.state.syncScroll }
+        svg=${IconSScroll}
+        svgOff=${IconSScrollOff}
+        title=${this.state.syncScroll ? "Turn scroll sync off" : "Turn scroll sync on"}
+        onClick=${this.toggleSyncScroll}
+        />
+
+        <${TButton}
+        svg=${IconSave}
+        title=${ "Save html file" }
+        onClick=${this.saveFile}
+        customClass=${ this.props.modified ? "alerted" : "" }
+        />
+
+
 
         </div>
 

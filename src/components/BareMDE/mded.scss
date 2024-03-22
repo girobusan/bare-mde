@@ -95,12 +95,22 @@
 
 
     }
-    &.modified button.saveButton{
+    &.modified .TButton.alerted{
       background-color: orangered;
       border: none;
       &:hover{
-        border-color: transparent;
+        border-color: orangered;
       }
+    }
+
+    .divider{
+      width: 2px;
+      flex-grow: 0;
+      margin: 0;
+      padding:0;
+      margin-right: 8px;
+      margin-left: 2px;
+      background-color: gray;
     }
 
     button{
@@ -119,6 +129,17 @@
       background-repeat: no-repeat;
       background-position: center center;
       background-size: 24px 24px;
+      svg{
+        display: block;
+        pointer-events: none;
+      }
+      &.formatting{
+        background-color: black;
+        border-color: black;
+        svg{
+          opacity: 0.9;
+        }
+      }
       &:hover{
         border-color: rgba(255,255,255,0.6);
       }
@@ -127,39 +148,6 @@
       }
       &:last-child{
         margin-right: 0;
-      }
-      &.previewToggle{
-        background-image: url(./icons/preview_FILL0_wght400_GRAD0_opsz24.svg);
-        &.on{
-          // background-image: url(./icons/no-preview-3.svg);
-        }
-      }
-      &.fullscreenToggle{
-        background-image: url(./icons/fullscreen_FILL0_wght400_GRAD0_opsz24.svg);
-        &.on{
-          background-image: url(./icons/fullscreen_exit_FILL0_wght400_GRAD0_opsz24.svg);
-        }
-      }
-      &.syncScrollToggle{
-        background-image: url(./icons/swap_vert_FILL0_wght400_GRAD0_opsz24.svg);
-        &.on{
-          background-image: url(./icons/arrows_locked.svg);
-        }
-      }
-      &.externalPreview{
-        background-image: url(./icons/visibility_FILL0_wght400_GRAD0_opsz24.svg);
-        &.on{
-        background-image: url(./icons/preview_big_on_min.svg);
-        }
-      }
-      &.saveButton{
-        background-image: url(./icons/save_white.svg);
-      }
-      &.spellcheckToggle{
-        background-image: url(./icons/spellcheck_FILL1_wght400_GRAD0_opsz24.svg);
-        &.on{
-          background-image: url(./icons/spellcheck_active_minified.svg);
-        }
       }
     }
   }
