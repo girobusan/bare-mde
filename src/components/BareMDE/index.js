@@ -1,4 +1,4 @@
-import { Component, createRef , enqueueRender as ER } from "preact";
+import { Component, createRef } from "preact";
 import {html} from "htm/preact";
 
 import {CodeJar} from "codejar";
@@ -9,7 +9,7 @@ const Prism =  require("./prism/prism.js")
 import Menu from "./Menu";
 import TButton from "./TButton";
 //
-//SVGS
+//   ICONS
 //
 import IconShowPreview from "./icons/preview_FILL0_wght400_GRAD0_opsz24.svg?raw" 
 //full preview
@@ -124,19 +124,6 @@ export default class BareMDE extends Component{
     window.addEventListener("resize", this.doPreview)
   }
 
-  createToggler(propName){
-
-    let t = function(){
-       const v = !this.state[propName];
-       const s = {};
-       s[propName] = v;
-       this.setState(s);
-    }
-
-    t = t.bind(this);
-    return t;
-    
-  }
   insertAt(txt , pos , what){
     //FIX: if string starts with newline, insert after newline.
     return txt.substring(0,pos) + what + txt.substring(pos);
@@ -147,25 +134,26 @@ export default class BareMDE extends Component{
     if(s.isCollapsed){ console.error("collapsed selection" ) ; return }
     const r = s.getRangeAt(0);
     if(!r){ return }
-    //chek if selection is inside our editor
+    //check if selection is inside our editor
     if(
       this.codeJarContainer.current.contains(r.commonAncestorContainer) ||
       this.codeJarContainer.current===r.commonAncestorContainer 
     ){
-      console.log(s , r);
+      // console.log(s , r);
       const start = r.startContainer;
       const startOf = r.startOffset;
       const end = r.endContainer;
       const endOf = r.endOffset;
-      //
+      // this must go first!
+      end.textContent = this.insertAt(
+         end.textContent, 
+         endOf, 
+         after)
+
       start.textContent = this.insertAt(
          start.textContent, 
          startOf, 
          before)
-      end.textContent = this.insertAt(
-         end.textContent, 
-         endOf+before.length, 
-         after)
       //update editor
       const p = this.jar.save();
       this.jar.updateCode(this.jar.toString());
@@ -254,7 +242,6 @@ export default class BareMDE extends Component{
     } 
      const v = !this.state.fullPreview;
      this.setState({fullPreview: v}); 
-     // console.log("state is set^" , this.state);
      // this.doPreview();
   }
   toggleSyncScroll(){
