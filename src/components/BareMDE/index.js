@@ -52,6 +52,7 @@ export default class BareMDE extends Component{
        modified: props.modified
      }
      this.surroundSelection = this.surroundSelection.bind(this);
+     // this.handleKey= this.handleKey.bind(this);
      this.togglePreview = this.togglePreview.bind(this);
      this.toggleFullPreview = this.toggleFullPreview.bind(this);
      this.toggleFullscreen = this.toggleFullscreen.bind(this);
@@ -124,6 +125,7 @@ export default class BareMDE extends Component{
     window.addEventListener("resize", this.doPreview)
   }
 
+
   insertAt(txt , pos , what){
     //FIX: if string starts with newline, insert after newline.
     return txt.substring(0,pos) + what + txt.substring(pos);
@@ -140,6 +142,8 @@ export default class BareMDE extends Component{
       this.codeJarContainer.current===r.commonAncestorContainer 
     ){
       // console.log(s , r);
+      const p = this.jar.save();
+      p.end+=( after.length + before.length);
       const start = r.startContainer;
       const startOf = r.startOffset;
       const end = r.endContainer;
@@ -155,7 +159,6 @@ export default class BareMDE extends Component{
          startOf, 
          before)
       //update editor
-      const p = this.jar.save();
       this.jar.updateCode(this.jar.toString());
       this.jar.restore(p);
       this.doPreview()

@@ -39,14 +39,16 @@ Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
 
 function MDEDemo(){
    const [ modified , setModified ]= useState(false);
-   const saveFn = useCallback(()=>{ setModified(false) ; alert("Save is not implemented in demo") }, [])
+   const saveFn = useCallback((c)=>{ setModified(false) ; alert("Save is not implemented in demo") }, [])
    const renderFn = useCallback( 
-     m=>`<html><head>
+     m=>`<!DOCTYPE html>
+     <html><head>
+     <!--css-->
      <link rel='stylesheet' href='simple.css'>
      </head><body><main>${ renderMd(m) }</main></body></html>` 
    ,[]
    )
-   const onChangeFn = useCallback( ()=>{console.log("change..."); !modified && setModified(true) } );
+   const onChangeFn = useCallback( (c)=>{console.log("change..." ); !modified && setModified(true) } );
    return html`
    <${BareMDE}  
    render=${renderFn} 
