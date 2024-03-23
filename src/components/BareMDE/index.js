@@ -143,7 +143,12 @@ export default class BareMDE extends Component{
     ){
       // console.log(s , r);
       const p = this.jar.save();
-      p.end+=( after.length + before.length);
+      if(p.dir==='->'){
+        p.end+=( after.length + before.length);
+      }else{
+        
+        p.start+=( after.length + before.length);
+      }
       const start = r.startContainer;
       const startOf = r.startOffset;
       const end = r.endContainer;
