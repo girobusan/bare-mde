@@ -52,7 +52,7 @@ export default class BareMDE extends Component{
        modified: props.modified
      }
      this.surroundSelection = this.surroundSelection.bind(this);
-     // this.handleKey= this.handleKey.bind(this);
+     this.handleKey= this.handleKey.bind(this);
      this.togglePreview = this.togglePreview.bind(this);
      this.toggleFullPreview = this.toggleFullPreview.bind(this);
      this.toggleFullscreen = this.toggleFullscreen.bind(this);
@@ -123,6 +123,18 @@ export default class BareMDE extends Component{
     //Chrome bug(?) fix (?):
     this.codeJarContainer.current.focus();
     window.addEventListener("resize", this.doPreview)
+    this.codeJarContainer.current.addEventListener("keydown" , this.handleKey);
+  }
+
+  handleKey(evt){ //:TODO implement editor commands interface
+      if(!evt.ctrlKey){ return }
+      evt.preventDefault();
+      evt.stopPropagation();
+      // console.log(evt.code);
+      if(evt.code==='KeyB'){ this.surroundSelection("**", "**") }
+      if(evt.code==='KeyI'){ this.surroundSelection("_", "_") }
+      if(evt.code==='KeyL'){ this.surroundSelection("[", "](https://)") }
+      if(evt.code==='KeyD'){ this.surroundSelection("~~", "~~") }
   }
 
 
@@ -218,9 +230,16 @@ export default class BareMDE extends Component{
 
   toggleFullscreen(){
      // console.log("Toggle fullscreen");
+     
      const v = !this.state.fullscreen;
-     if(v){ this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex }
-     else{ this.componentContainer.current.style.zIndex = "unset"}
+     if(v){
+     typeof this.props.onEnterFullScreen === 'function' && this.props.onEnterFullScreen();
+     this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex 
+     }
+     else{ 
+       typeof this.props.onExitFullScreen === 'function' && this.props.onExitFullScreen();
+       this.componentContainer.current.style.zIndex = "unset"
+       }
      try {
      console.log("about to set state");
         this.setState({fullscreen: v});
@@ -447,6 +466,8 @@ BareMDE.defaultProps = {
    indicateChanges: true,
    previewClass: "markdownPreviewArea",
    fullScreen: false,
+   onEnterFullScreen: ()=>document.body.style.overflow="hidden",
+   onExitFullScreen: ()=>document.body.style.overflow="initial",
    showPreview: true,
    spellCheck: true,
    fullscreenZIndex: 1001,

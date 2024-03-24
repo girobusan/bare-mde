@@ -89,6 +89,10 @@ Default = false.</p>
 <p>Optional. Class name for preview panel. Default: markdownPreviewArea</p>
 <h3>fullScreen</h3>
 <p>If true, starts in fullscreen. Default = false.</p>
+<h3>onEnterFullScreen</h3>
+<p>Function to execute on enter full screen. Default: <code>()=&gt;document.body.style.overflow=&quot;hidden&quot;</code></p>
+<h3>onExitFullScreen</h3>
+<p>Function to execute on exit full screen. Default: <code>()=&gt;document.body.style.overflow=&quot;initial&quot;</code></p>
 <h3>showPreview</h3>
 <p>If true, starts with visible preview panel. Default = true.</p>
 <h3>spellCheck</h3>
@@ -155,6 +159,15 @@ Optional. Class name for preview panel. Default: markdownPreviewArea
 ### fullScreen
 
 If true, starts in fullscreen. Default = false.
+
+### onEnterFullScreen
+
+Function to execute on enter full screen. Default: `()=&gt;document.body.style.overflow="hidden"`
+
+### onExitFullScreen
+
+Function to execute on exit full screen. Default: `()=&gt;document.body.style.overflow="initial"`
+
 
 ### showPreview
 
