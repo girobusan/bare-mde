@@ -397,7 +397,7 @@ export default class BareMDE extends Component{
          onClick=${()=>this.fireCommand("link")}
          />
 
-         <div class="divider"></div>
+         <div class="divider" />
 
 
          <${TButton} 

@@ -63,26 +63,10 @@ function MDEDemo(){
 }
 
 console.log("about to start...")
-const editor = h( MDEDemo , { 
-  });
+const editor = h( MDEDemo , {});
 
-console.log("created" , editor);
 const element = document.querySelector("#editorTest");
-console.log("about to render at" , element);
 render(  editor , element);
-console.log("rendered");
-/*
-
-
-   < ${BareMDE}
-    menuItems=${ menu } 
-   fullScreen=${ false } 
-   modified=${ modified }
-   spellCheck=${ false }  
-   />
-
-
- */
 
 
 
