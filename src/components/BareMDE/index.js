@@ -61,6 +61,14 @@ export default class BareMDE extends Component{
      this.doPreview = this.doPreview.bind(this);
      this.saveFile = this.saveFile.bind(this);
      this.syncPreviewScroll = this.syncPreviewScroll.bind(this);
+     this.editorCommands = {
+       "bold": ()=>this.surroundSelection("**","**"),
+       "italic": ()=>this.surroundSelection("_","_"),
+       "strike": ()=>this.surroundSelection("~~","~~"),
+       "link": ()=>{ let url=prompt("Enter URL:" , "https://") ;
+       this.surroundSelection("[", "](" + ( url || "" ) + ")")
+       }
+     }
   }
   shouldComponentUpdate(p , s){
      
@@ -126,15 +134,17 @@ export default class BareMDE extends Component{
     this.codeJarContainer.current.addEventListener("keydown" , this.handleKey);
   }
 
-  handleKey(evt){ //:TODO implement editor commands interface
-      if(!evt.ctrlKey){ return }
-      evt.preventDefault();
-      evt.stopPropagation();
+  fireCommand(command){
+   this.editorCommands[command]();
+  }
+
+  handleKey(evt){ 
+     if(!evt.ctrlKey){ return }
       // console.log(evt.code);
-      if(evt.code==='KeyB'){ this.surroundSelection("**", "**") }
-      if(evt.code==='KeyI'){ this.surroundSelection("_", "_") }
-      if(evt.code==='KeyL'){ this.surroundSelection("[", "](https://)") }
-      if(evt.code==='KeyD'){ this.surroundSelection("~~", "~~") }
+      if(evt.code==='KeyB'){this.fireCommand("bold")}
+      if(evt.code==='KeyI'){this.fireCommand("italic")}
+      if(evt.code==='KeyL'){this.fireCommand("link")}
+      if(evt.code==='KeyD'){this.fireCommand("strike")}
   }
 
 
@@ -216,7 +226,7 @@ export default class BareMDE extends Component{
     }
     doScroll()
 
-    window.setTimeout( ()=>{ this.scrollThrottled=false ; doScroll() } , 100 );
+    window.setTimeout( ()=>{ this.scrollThrottled=false ; doScroll() } , 50 );
 
   }
   
@@ -364,28 +374,28 @@ export default class BareMDE extends Component{
          isOn=${true}
          customClass="formatting"
          svg=${IconBold}
-         onClick=${ ()=>this.surroundSelection("**", "**") }
+         onClick=${()=>this.fireCommand("bold")}
          />
 
          <${TButton}
          customClass="formatting"
          isOn=${true}
          svg=${IconItalic}
-         onClick=${ ()=>this.surroundSelection("_", "_") }
+         onClick=${()=>this.fireCommand("italic")}
          />
 
          <${TButton}
          customClass="formatting"
          isOn=${true}
          svg=${IconStrike}
-         onClick=${ ()=>this.surroundSelection("~~", "~~") }
+         onClick=${()=>this.fireCommand("strike")}
          />
 
          <${TButton}
          customClass="formatting"
          isOn=${true}
          svg=${IconLink}
-         onClick=${ ()=>this.surroundSelection("[", "](https://)") }
+         onClick=${()=>this.fireCommand("link")}
          />
 
          <div class="divider"></div>
