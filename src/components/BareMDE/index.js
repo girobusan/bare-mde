@@ -43,7 +43,7 @@ export default class BareMDE extends Component{
      this.previewContainer = createRef();
      this.previewFrame = createRef();
      this.state ={ 
-       fullscreen: props.fullScreen,
+       fullscreen: props.fullscreen,
        showPreview: props.showPreview,
        fullPreview: false,
        content: props.content,
@@ -188,7 +188,7 @@ export default class BareMDE extends Component{
       //update editor
       this.jar.updateCode(this.jar.toString());
       this.jar.restore(p);
-      this.doPreview()
+      this.doPreview(true)
       return;
     }else{
       console.error("wrong selection");
@@ -243,18 +243,17 @@ export default class BareMDE extends Component{
      
      const v = !this.state.fullscreen;
      if(v){
-     typeof this.props.onEnterFullScreen === 'function' && this.props.onEnterFullScreen();
+     typeof this.props.onEnterFullscreen === 'function' && this.props.onEnterFullscreen();
      this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex 
+     if(this.props.trueFullscreen && document.fullscreenEnabled){ this.componentContainer.current.requestFullscreen() }
      }
      else{ 
-       typeof this.props.onExitFullScreen === 'function' && this.props.onExitFullScreen();
+       typeof this.props.onExitFullscreen === 'function' && this.props.onExitFullscreen();
        this.componentContainer.current.style.zIndex = "unset"
+       if(this.props.trueFullscreen && document.fullscreenEnabled){ document.exitFullscreen()}
        }
      try {
-     console.log("about to set state");
         this.setState({fullscreen: v});
-     console.log("state set");
-
      }catch(e){
        console.error("Error found!" , e);
      }
@@ -475,9 +474,10 @@ BareMDE.defaultProps = {
    modified: false,
    indicateChanges: true,
    previewClass: "markdownPreviewArea",
-   fullScreen: false,
-   onEnterFullScreen: ()=>document.body.style.overflow="hidden",
-   onExitFullScreen: ()=>document.body.style.overflow="initial",
+   fullscreen: false,
+   onEnterFullscreen: ()=>document.body.style.overflow="hidden",
+   onExitFullscreen: ()=>document.body.style.overflow="initial",
+   trueFullscreen: false,
    showPreview: true,
    spellCheck: true,
    fullscreenZIndex: 1001,

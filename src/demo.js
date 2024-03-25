@@ -53,6 +53,7 @@ function MDEDemo(){
    <${BareMDE}  
    render=${renderFn} 
    save=${saveFn}
+   trueFullscreen=${true}
    content=${ testString }  
    modified=${ modified }
    onUpdate=${onChangeFn}
