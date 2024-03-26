@@ -30,13 +30,23 @@ module.exports = function (env, argv) {
     mode: argv.mode,
     entry: {
       "demo": './src/demo.js',
-      "baremde_web":{import:  './src/baremde_web'}// , filename: builddir=='docs' ? '../dist/baremde_web.js' : '../test/baremde_web.js' },
+      "baremde_web":{import:  './src/baremde_web'},
+      "BareMDE": { 
+           import: './src/components/BareMDE/index.js',
+           library: {
+              type: "umd",
+              name: "BareMDE",
+           }
+           }
+    },
+    externals: function({ context, request }, callback){
+         if(request.endsWith("/BareMDE/index.js")){ return callback( null , 'preact' )}
+         return "";
     },
     devtool: argv.mode != "production" ? 'inline-source-map' : false, 
     devServer: argv.mode != "production" ? {contentBase: 'docs'} : {contentBase: 'test'},
 
     output: {
-    //   filename: '[name].js',
       path: path.resolve(__dirname, builddir, "")
     },
 
@@ -76,19 +86,17 @@ module.exports = function (env, argv) {
 
     },
     plugins: [
-new CopyPlugin({
-      patterns: [
-        { from: "src/demo_html/*.*" , to( {context , absoluteFilename} ){
-           return "[name][ext]"
-        } },
-      ],
-    }),
+      new CopyPlugin({
+        patterns: [
+          { from: "src/demo_html/*.*" , to( {context , absoluteFilename} ){
+            return "[name][ext]"
+          } },
+        ],
+      }),
       new webpack.DefinePlugin({
         // Definitions...
         'VERSION': JSON.stringify(pkg.version)
       }),
-
-
     ],
   };
 }
