@@ -18,5 +18,7 @@ Probably, not the embeddable markdown editor you're looking for.
 
 ![screenshot](docs/screen_00_rounded.png)
 
+:memo: License: LGPL 3.0
+
 This repo is a bit messy. If you think, you would use this component, 
 file me an issue. 

@@ -1,16 +1,12 @@
 const path = require('path');
+const TerserPlugin = require('terser-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 const webpack = require('webpack');
 const pkg = require('./package.json');
-const fs = require('fs');
-var coreCSS="/*not generated yet*/"
 
 
 const env = process.env.NODE_ENV;
 
-const econfig = {
-  mode: env || 'development'
-}
 
 
 
@@ -22,7 +18,14 @@ module.exports = function (env, argv) {
     watch: argv.mode != 'production',
     target: 'web',
     optimization: {
-
+      minimizer: [new TerserPlugin({
+      extractComments: false,
+      terserOptions: {
+        format: {
+          comments: false,
+        },
+      
+    }})]
 
     },
 
@@ -30,19 +33,19 @@ module.exports = function (env, argv) {
     mode: argv.mode,
     entry: {
       "demo": './src/demo.js',
-      "baremde_web":{import:  './src/baremde_web'},
       "BareMDE": { 
            import: './src/components/BareMDE/index.js',
            library: {
               type: "umd",
               name: "BareMDE",
            }
-           }
+           },
+      "baremde_web":{import:  './src/baremde_web' , dependOn: 'BareMDE'},
     },
-    externals: function({ context, request }, callback){
-         if(request.endsWith("/BareMDE/index.js")){ return callback( null , 'preact' )}
-         return "";
-    },
+    // externals: function({ context, request }, callback){
+    //      if(request.endsWith("/BareMDE/index.js")){ return callback( null , 'preact' )}
+    //      return "";
+    // },
     devtool: argv.mode != "production" ? 'inline-source-map' : false, 
     devServer: argv.mode != "production" ? {contentBase: 'docs'} : {contentBase: 'test'},
 
