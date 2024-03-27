@@ -14,7 +14,7 @@ module.exports = function (env, argv) {
 
   let builddir = argv.mode== 'production' ? 'docs' : 'test';
 
-  return {
+  let baseConf =  {
     watch: argv.mode != 'production',
     target: 'web',
     optimization: {
@@ -24,35 +24,18 @@ module.exports = function (env, argv) {
         format: {
           comments: false,
         },
-      
     }})]
-
     },
-
-
     mode: argv.mode,
     entry: {
       "demo": './src/demo.js',
-      "BareMDE": { 
-           import: './src/components/BareMDE/index.js',
-           library: {
-              type: "umd",
-              name: "BareMDE",
-           }
-           },
-      "baremde_web":{import:  './src/baremde_web' , dependOn: 'BareMDE'},
+      "baremde_web":{import:  './src/baremde_web' },
     },
-    // externals: function({ context, request }, callback){
-    //      if(request.endsWith("/BareMDE/index.js")){ return callback( null , 'preact' )}
-    //      return "";
-    // },
     devtool: argv.mode != "production" ? 'inline-source-map' : false, 
     devServer: argv.mode != "production" ? {contentBase: 'docs'} : {contentBase: 'test'},
-
     output: {
       path: path.resolve(__dirname, builddir, "")
     },
-
     module: {
       rules: [
         {
@@ -75,16 +58,6 @@ module.exports = function (env, argv) {
             'sass-loader'
           ],
         },
-        {
-          test: /\.(woff|ttf)$/,
-          use: [{
-            loader: 'file-loader',
-            options: {
-              name: 'fonts/[name].[ext]'
-            }
-          }
-          ],
-        }
       ]
 
     },
@@ -102,4 +75,34 @@ module.exports = function (env, argv) {
       }),
     ],
   };
+
+  let libConf = Object.assign({} , baseConf);
+
+// build the lib
+  libConf.entry =  {
+      "BareMDE": { 
+           import: './src/components/BareMDE/index.js',
+           library: {
+              type: "umd",
+              name: "BareMDE",
+           }
+        },
+    };
+  libConf.externalsType="umd";
+  //do not bundle preact to the lib
+  libConf.externals = 'preact';
+  libConf.plugins = [
+  new webpack.DefinePlugin({
+        'VERSION': JSON.stringify(pkg.version)
+      }),
+
+  ];
+ 
+ //do not need to output it to 'test'
+    libConf.output= {
+      path: path.resolve(__dirname, "dist", ""),
+      filename: "BareMDE_v"+pkg.version+ ".js"
+    };
+
+  return [ baseConf , libConf ] ;
 }

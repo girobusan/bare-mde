@@ -1,8 +1,14 @@
 console.log("BareMDE web version");
-import {h, render } from "preact";
-import BareMDE from "../docs/BareMDE";
+// import * as preact from 'preact'
+// console.log(preact)
 
-window.BareMDE = function( props , element ){
+import {h, render } from "preact";
+import BareMDE from "../dist/BareMDE_v0.2.0.js";
+// import preact from 'preact'
+
+// console.log("BMDE" , BareMDE)
+
+window.BareMDEditor = function( props , element ){
   const e = h(BareMDE , props  );
   render( e , element )
 }
