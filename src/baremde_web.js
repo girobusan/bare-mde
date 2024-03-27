@@ -1,8 +1,8 @@
 console.log("BareMDE web version");
 // import * as preact from 'preact'
 // console.log(preact)
-
 import {h, render } from "preact";
+console.log("h" , h)
 import BareMDE from "../dist/BareMDE_v0.2.0.js";
 // import preact from 'preact'
 

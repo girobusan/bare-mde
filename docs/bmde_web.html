@@ -44,7 +44,7 @@ width: calc( 100% + 200px);
   "filename": "bmde_web.html",
   "footer": "&lt;small&gt;Powered by &lt;a href='https://github.com/girobusan/imp'&gt;IMP!&lt;/a&gt; and &lt;a href='https://matejlatin.github.io/Gutenberg/'&gt;Gutenberg CSS&lt;/a&gt;&lt;/small&gt;",
   "css": "#editorTest{\n\nmin-height: 32px;\nmin-width: 100%;\nmin-width: 600px;\nmax-width: initial;\nborder-radius: 6px;\nborder: 1px solid gray;\noverflow: hidden;\nbackground-color: transparent;\nmargin: 0 -100px;\nwidth: calc( 100% + 200px);\n}\n\n@media(max-width:800px){\n#editorTest{\n    width:100%;\n     margin: 0 auto;\n}\n  ",
-  "headHTML": "&lt;script src=\"baremde_web.js\" &gt;&lt;/script&gt;\n&lt;script&gt;\nwindow.addEventListener(\"DOMContentLoaded\" , function(){\n  const el = document.querySelector(\"#editorTest\");\nwindow.BareMDE({} , el)\n})\n\n&lt;/script&gt;",
+  "headHTML": "&lt;script src=\"baremde_web.js\" &gt;&lt;/script&gt;\n&lt;script&gt;\nwindow.addEventListener(\"DOMContentLoaded\" , function(){\n  const el = document.querySelector(\"#editorTest\");\n  try{\n   window.BareMDEditor({} , el)\n   }catch(e){\nconsole.error(e);\n}\n})\n\n&lt;/script&gt;",
   "editor": "",
   "viewCSS": "",
   "author": "",
@@ -89,7 +89,11 @@ width: calc( 100% + 200px);
 <script>
 window.addEventListener("DOMContentLoaded" , function(){
   const el = document.querySelector("#editorTest");
-window.BareMDE({} , el)
+  try{
+   window.BareMDEditor({} , el)
+   }catch(e){
+console.error(e);
+}
 })
 
 </script>

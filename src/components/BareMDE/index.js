@@ -1,4 +1,4 @@
-import { Component, createRef } from "preact";
+import { h , Component, createRef } from "preact";
 import {html} from "htm/preact";
 
 import {CodeJar} from "codejar";

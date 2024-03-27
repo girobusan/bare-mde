@@ -1,3 +1,4 @@
+import { h } from "preact";
 import {html} from "htm/preact";
 
 export default function TButton({ 

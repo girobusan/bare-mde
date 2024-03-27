@@ -1,4 +1,4 @@
-import { Component} from "preact";
+import { h , Component} from "preact";
 import {html} from "htm/preact";
 import { If } from "./If";
 
