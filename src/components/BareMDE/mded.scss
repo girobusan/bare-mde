@@ -58,7 +58,12 @@
         border: none;
         width: 32px;
         height: 32px;
-        background-image: url("./icons/menu_FILL0_wght400_GRAD0_opsz24.svg");
+        padding-top: 3px;
+        svg{
+          display: block;
+          pointer-events: none;
+          user-select: none;
+        }
       }
       .menuItems{
         min-width: 250px;

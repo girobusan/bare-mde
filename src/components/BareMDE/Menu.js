@@ -1,6 +1,8 @@
 import { h , Component} from "preact";
 import {html} from "htm/preact";
 import { If } from "./If";
+import svgM from "./icons/menu_FILL0_wght400_GRAD0_opsz24.svg?raw"
+console.log(svgM);
 
 
 export default class Menu extends Component{
@@ -41,6 +43,7 @@ export default class Menu extends Component{
     return html`
     <div class="EditorMenu">
     <button
+    dangerouslySetInnerHTML=${{__html: svgM}}
     title=${this.props.title || "Menu"}
     onClick=${(e)=>{  e.stopPropagation() ; e.preventDefault(); this.setState({ open: !this.state.open }) }}></button>
     <${If} condition=${this.state.open}>

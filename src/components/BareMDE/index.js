@@ -140,6 +140,8 @@ export default class BareMDE extends Component{
 
   handleKey(evt){ 
      if(!evt.ctrlKey){ return }
+     evt.preventDefault();
+     evt.stopPropagation();
       // console.log(evt.code);
       if(evt.code==='KeyB'){this.fireCommand("bold")}
       if(evt.code==='KeyI'){this.fireCommand("italic")}
@@ -367,47 +369,39 @@ export default class BareMDE extends Component{
          <${Menu} 
          title=${this.props.menuTitle || "Additional functions"}
          zIndex=${this.state.fullscreen ? this.props.fullscreenZIndex+100 : "initial"}
-         items=${this.props.menuItems}/>
-
+         items=${this.props.menuItems}
+         />
          <${TButton}
          isOn=${true}
          customClass="formatting"
          svg=${IconBold}
          onClick=${()=>this.fireCommand("bold")}
          />
-
          <${TButton}
          customClass="formatting"
          isOn=${true}
          svg=${IconItalic}
          onClick=${()=>this.fireCommand("italic")}
          />
-
          <${TButton}
          customClass="formatting"
          isOn=${true}
          svg=${IconStrike}
          onClick=${()=>this.fireCommand("strike")}
          />
-
          <${TButton}
          customClass="formatting"
          isOn=${true}
          svg=${IconLink}
          onClick=${()=>this.fireCommand("link")}
          />
-
          <div class="divider" />
-
-
          <${TButton} 
          isOn=${this.state.showPreview}
          svg=${IconShowPreview}
          title="Toggle Preview" 
          onClick=${this.togglePreview} 
          />
-
-
          <${TButton}
          isOn=${this.state.fullPreview}
          svg=${IconFPreview}
@@ -415,7 +409,6 @@ export default class BareMDE extends Component{
          title=${this.props.externalPreviewTitle || "Full width preview"} 
          onClick=${this.toggleFullPreview}
          />
-
         <${TButton}
         isOn=${ this.state.fullscreen }
         svg=${IconFScreen}
@@ -423,7 +416,6 @@ export default class BareMDE extends Component{
         title=${this.state.fullscreen ? "Exit fullscreen" : "Go fullscreen"}
         onClick=${this.toggleFullscreen}
         />
-
         <${TButton}
         isOn=${ this.state.spellCheck }
         svg=${IconSpell}
@@ -431,7 +423,6 @@ export default class BareMDE extends Component{
         title=${this.state.spellCheck ? "Turn spellchek off" : "Turn spellcheck on"}
         onClick=${this.toggleSpellcheck}
         />
-
         <${TButton}
         isOn=${ this.state.syncScroll }
         svg=${IconSScroll}
@@ -439,16 +430,13 @@ export default class BareMDE extends Component{
         title=${this.state.syncScroll ? "Turn scroll sync off" : "Turn scroll sync on"}
         onClick=${this.toggleSyncScroll}
         />
-
         <${TButton}
         svg=${IconSave}
         title=${ "Save html file" }
         onClick=${this.saveFile}
         customClass=${ this.props.modified ? "alerted" : "" }
         />
-
         </div>
-
          <div class="workArea">
          <div  
               class="codeJar language-md" 
@@ -457,7 +445,8 @@ export default class BareMDE extends Component{
               </div>
               <div 
               class="preview ${this.props.previewClass}" 
-              ref=${this.previewContainer}><iframe style="min-height:100%" ref=${this.previewFrame}></iframe>
+              ref=${this.previewContainer}>
+              <iframe style="min-height:100%" ref=${this.previewFrame}></iframe>
               </div>
       </div>
     </div>`
