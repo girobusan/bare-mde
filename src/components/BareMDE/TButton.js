@@ -26,5 +26,5 @@ export default function TButton({
    dangerouslySetInnerHTML=${{__html:isOn? svg : svgOff}}
    title=${ title||'' }
    onClick=${ typeof onClick === 'function' ? onClick : ()=>console.log('button clicked') }
-   ></button>`
+   />`
 }

@@ -58,16 +58,15 @@ export default class BareMDE extends Component{
      this.toggleFullscreen = this.toggleFullscreen.bind(this);
      this.toggleSpellcheck = this.toggleSpellcheck.bind(this);
      this.toggleSyncScroll = this.toggleSyncScroll.bind(this);
-     this.doPreview = this.doPreview.bind(this);
+     //
      this.saveFile = this.saveFile.bind(this);
-     this.syncPreviewScroll = this.syncPreviewScroll.bind(this);
+     this.onCodeUpdate = this.onCodeUpdate.bind(this);
      this.editorCommands = {
-       "bold": ()=>{ this.surroundSelection("**","**") ; this.doPreview()},
-       "italic": ()=>{ this.surroundSelection("_","_"); this.doPreview() },
-       "strike": ()=>{ this.surroundSelection("~~","~~"); this.doPreview() },
+       "bold": ()=>{ this.surroundSelection("**","**") },
+       "italic": ()=>{ this.surroundSelection("_","_")},
+       "strike": ()=>{ this.surroundSelection("~~","~~")},
        "link": ()=>{ let url=prompt("Enter URL:" , "https://") ;
        this.surroundSelection("[", "](" + ( url || "" ) + ")")
-       this.doPreview()
        }
      }
   }
@@ -89,7 +88,7 @@ export default class BareMDE extends Component{
      return true;
   }
 
-  compomemtDidUpdate(oldS , oldP){
+  componentDidUpdate(oldS , oldP){
      // console.log("Component updated")
     // console.log("Bare MDE updated" , this.jar.save())
     // if component updated,
@@ -112,6 +111,12 @@ export default class BareMDE extends Component{
 
     window.removeEventListener("resize", this.doPreview)
   }
+  onCodeUpdate(){
+   
+      this.pos = this.jar.save();
+      typeof this.props.onUpdate==='function' && this.props.onUpdate(this.jar.toString());
+      this.doPreview();
+  }
   componentDidMount(){
     this.jar = CodeJar(this.codeJarContainer.current , 
     (e)=>Prism.highlightElement(e,false,null),
@@ -123,16 +128,12 @@ export default class BareMDE extends Component{
     );
     this.jar.updateCode(this.props.content);
     this.doPreview();
-    const updJar =  ()=>{
-      this.pos = this.jar.save();
-      typeof this.props.onUpdate==='function' && this.props.onUpdate(this.jar.toString());
-      this.doPreview();
-    } ;
-    this.jar.onUpdate( updJar );
+    this.jar.onUpdate( this.onCodeUpdate);
     //Chrome bug(?) fix (?):
     this.codeJarContainer.current.focus();
     window.addEventListener("resize", this.doPreview)
     this.codeJarContainer.current.addEventListener("keydown" , this.handleKey);
+    console.log(this.jar);
   }
 
   fireCommand(command){
@@ -141,8 +142,11 @@ export default class BareMDE extends Component{
 
   handleKey(evt){ 
      if(!evt.ctrlKey){ return }
-     evt.preventDefault();
-     evt.stopPropagation();
+     if( ['KeyB' , 'KeyI' , 'KeyL' , 'KeyD'].indexOf(evt.code )!=-1)
+     {
+       evt.preventDefault();
+       evt.stopPropagation();
+     }
       // console.log(evt.code);
       if(evt.code==='KeyB'){this.fireCommand("bold")}
       if(evt.code==='KeyI'){this.fireCommand("italic")}
@@ -189,9 +193,11 @@ export default class BareMDE extends Component{
          startOf, 
          before)
       //update editor
+      this.codeJarContainer.current.focus()
       this.jar.updateCode(this.jar.toString());
       this.jar.restore(p);
       this.doPreview(true)
+      this.onCodeUpdate();
       return;
     }else{
       console.error("wrong selection");
