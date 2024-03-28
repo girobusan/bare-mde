@@ -11,6 +11,12 @@ const menu = [
    { "label": "test menu items" , "handler": ()=>alert("Menu item clicked") },
    { "label": "test2" , "handler": ()=>alert("Menu item2 clicked") },
    ]
+
+const shortString=`Lorem Ipsum
+-----------
+
+Lorem ipsum __dolor sit__ amet, consectetur adipiscing elit,`
+
 const testString = `# Why another web editor for markdown?
 
 1. First, I do not want "pseudo-preview"  
@@ -54,9 +60,10 @@ function MDEDemo(){
    render=${renderFn} 
    save=${saveFn}
    trueFullscreen=${true}
-   content=${ testString }  
+   content=${ shortString }  
    modified=${ modified }
    onUpdate=${onChangeFn}
+   maxHeight="initial"
    menuItems=${ menu }/>
    `
   

@@ -2,8 +2,6 @@ import { h , Component} from "preact";
 import {html} from "htm/preact";
 import { If } from "./If";
 import svgM from "./icons/menu_FILL0_wght400_GRAD0_opsz24.svg?raw"
-console.log(svgM);
-
 
 export default class Menu extends Component{
   constructor(props){
@@ -21,8 +19,7 @@ export default class Menu extends Component{
     // this.setState({"open" : false});
   }
 
-  doClose(e){
-    console.log("do close") 
+  doClose(){
     this.setState({ "open" : false })
   }
 
@@ -45,11 +42,14 @@ export default class Menu extends Component{
     <button
     dangerouslySetInnerHTML=${{__html: svgM}}
     title=${this.props.title || "Menu"}
-    onClick=${(e)=>{  e.stopPropagation() ; e.preventDefault(); this.setState({ open: !this.state.open }) }}></button>
+    onClick=${(e)=>{  e.stopPropagation() ; e.preventDefault(); this.setState({ open: !this.state.open }) }}/>
     <${If} condition=${this.state.open}>
     <div class="menuItems" style="z-index:${this.props.zIndex}">
     ${ this.props.items.map( 
-    (e,i)=>html`<div class="Item" onMouseDown=${ ()=>my.handleItem(i) }>${e.label}</div>` 
+    (e,i)=>html`<div class="Item" 
+    onMouseDown=${ ()=>my.handleItem(i) }
+    dangerouslySetInnerHTML=${{__html: e.label}}
+    />` 
     ) }
     </div>
     </${If}>

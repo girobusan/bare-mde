@@ -62,11 +62,12 @@ export default class BareMDE extends Component{
      this.saveFile = this.saveFile.bind(this);
      this.syncPreviewScroll = this.syncPreviewScroll.bind(this);
      this.editorCommands = {
-       "bold": ()=>this.surroundSelection("**","**"),
-       "italic": ()=>this.surroundSelection("_","_"),
-       "strike": ()=>this.surroundSelection("~~","~~"),
+       "bold": ()=>{ this.surroundSelection("**","**") ; this.doPreview()},
+       "italic": ()=>{ this.surroundSelection("_","_"); this.doPreview() },
+       "strike": ()=>{ this.surroundSelection("~~","~~"); this.doPreview() },
        "link": ()=>{ let url=prompt("Enter URL:" , "https://") ;
        this.surroundSelection("[", "](" + ( url || "" ) + ")")
+       this.doPreview()
        }
      }
   }
