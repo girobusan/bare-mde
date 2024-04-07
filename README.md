@@ -4,7 +4,7 @@ Bare markdown editor, based on CodeJar. It's a Preact component, bundled* as umd
 
 Probably, not the embedable markdown editor you're looking for.
 
-- As minimal, as possible (about 60Kb when built)
+- As minimal, as possible (about 50Kb when built)
 - Browser native spellcheck
 - Fully isolated preview panel, pixel-perfect preview possible
 - Split preview, full width preview
