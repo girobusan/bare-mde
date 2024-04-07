@@ -20,5 +20,5 @@ Probably, not the embedable markdown editor you're looking for.
 
 :memo: License: LGPL 3.0
 
-* without Preact
+\* without Preact
 
