@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bare MDE Demo Page</title>
+  <meta name="description" content="Demo">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <meta name="og:title" content="Bare MDE Demo Page">
+  <meta name="og:description" content="Demo">
+  <meta name="og:image" content="">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="">
+  <link rel="icon" type="image/png" href="">
+  <link id = "viewCSS" rel="stylesheet" href="style.css">
+  <style id="customCSS">#editorTest{
+
+min-height: 32px;
+min-width: 100%;
+min-width: 600px;
+max-width: initial;
+border-radius: 6px;
+border: 1px solid gray;
+overflow: hidden;
+background-color: transparent;
+margin: 0 -100px;
+width: calc( 100% + 200px);
+}
+
+@media(max-width:800px){
+#editorTest{
+    width:100%;
+     margin: 0 auto;
+}
+  
+  </style>
+  <script>
+   window.settings = {
+  "title": "Bare MDE Demo Page",
+  "description": "Demo",
+  "image": "",
+  "icon": "",
+  "filename": "bmde_web.html",
+  "footer": "&lt;small&gt;Powered by &lt;a href='https://github.com/girobusan/imp'&gt;IMP!&lt;/a&gt; and &lt;a href='https://matejlatin.github.io/Gutenberg/'&gt;Gutenberg CSS&lt;/a&gt;&lt;/small&gt;",
+  "css": "#editorTest{\n\nmin-height: 32px;\nmin-width: 100%;\nmin-width: 600px;\nmax-width: initial;\nborder-radius: 6px;\nborder: 1px solid gray;\noverflow: hidden;\nbackground-color: transparent;\nmargin: 0 -100px;\nwidth: calc( 100% + 200px);\n}\n\n@media(max-width:800px){\n#editorTest{\n    width:100%;\n     margin: 0 auto;\n}\n  ",
+  "headHTML": "&lt;script src=\"baremde_web.js\" &gt;&lt;/script&gt;\n&lt;script&gt;\nwindow.addEventListener(\"DOMContentLoaded\" , function(){\n  const el = document.querySelector(\"#editorTest\");\n  try{\n   window.BareMDEditor({} , el)\n   }catch(e){\nconsole.error(e);\n}\n})\n\n&lt;/script&gt;",
+  "editor": "",
+  "viewCSS": "",
+  "author": "",
+  "keywords": ""
+}
+   window.savedWithImpVersion = "0.3.1"
+  </script>
+  <script>
+    window.addEventListener("DOMContentLoaded" , function(){
+
+   function IMPEdit(){
+   console.info("Loading editor...")
+   const editor = document.createElement("script");
+   editor.id="editorScript";
+   editor.src="imp.js";
+   document.head.appendChild(editor);
+   }
+
+   if(window.self.name==="IMPPreviewIframe")
+   {
+   return;
+   }
+   if(window.location.search.indexOf("mode=view")!=-1)
+   {
+   return;
+   }
+   if(window.location.search.indexOf("mode=edit")!=-1)
+   {
+   IMPEdit();
+   return;
+   }
+   if(window.location.search.indexOf("mode=download")!=-1){
+   IMPEdit();
+   return;
+   }
+   if(window.location.protocol==="file:"){
+   IMPEdit();
+   }
+})
+  </script>
+  <script src="baremde_web.js" ></script>
+<script>
+window.addEventListener("DOMContentLoaded" , function(){
+  const el = document.querySelector("#editorTest");
+  try{
+   window.BareMDEditor({} , el)
+   }catch(e){
+console.error(e);
+}
+})
+
+</script>
+</head>
+<body>
+<main class='container'><h1>🐻 Bare  MDE Web Demo</h1>
+<p>This is a test page for Bare MDE web version. See <a href="?mode=edit">source</a>. This demo does not provide actual markdown render.</p>
+<div id="editorTest" style="max-height: 400px"> </div></main>
+<footer id="pageFooter"><small>Powered by <a href='https://github.com/girobusan/imp'>IMP!</a> and <a href='https://matejlatin.github.io/Gutenberg/'>Gutenberg CSS</a></small></footer>
+<script id="pageData" type="text/markdown">:bear: Bare  MDE Web Demo
+===================
+This is a test page for Bare MDE web version. See [source](?mode=edit). This demo does not provide actual markdown render.
+
+&lt;div id="editorTest" style="max-height: 400px"&gt; &lt;/div&gt;</script>
+</body>
+</html>

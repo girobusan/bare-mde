@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <meta name="og:title" content="">
+  <meta name="og:description" content="">
+  <meta name="og:image" content="">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="">
+  <link rel="icon" type="image/png" href="">
+  <link id = "viewCSS" rel="stylesheet" href="style.css">
+  <style id="customCSS">/* write your CSS here*/
+  </style>
+  <script>
+   window.settings = {
+  "title": "",
+  "description": "",
+  "image": "",
+  "icon": "",
+  "filename": "props.html",
+  "footer": "",
+  "css": "/* write your CSS here*/",
+  "headHTML": "",
+  "editor": "",
+  "viewCSS": "",
+  "author": "",
+  "keywords": ""
+}
+   window.savedWithImpVersion = "0.3.1"
+  </script>
+  <script>
+    window.addEventListener("DOMContentLoaded" , function(){
+
+   function IMPEdit(){
+   console.info("Loading editor...")
+   const editor = document.createElement("script");
+   editor.id="editorScript";
+   editor.src="imp.js";
+   document.head.appendChild(editor);
+   }
+
+   if(window.self.name==="IMPPreviewIframe")
+   {
+   return;
+   }
+   if(window.location.search.indexOf("mode=view")!=-1)
+   {
+   return;
+   }
+   if(window.location.search.indexOf("mode=edit")!=-1)
+   {
+   IMPEdit();
+   return;
+   }
+   if(window.location.search.indexOf("mode=download")!=-1){
+   IMPEdit();
+   return;
+   }
+   if(window.location.protocol==="file:"){
+   IMPEdit();
+   }
+})
+  </script>
+  <!--custom html here-->
+</head>
+<body>
+<main class='container'><h1>BareMDE 🐻 props</h1>
+<h3>render</h3>
+<p>Function, which gets markdown text as a parameter and returns rendered HTML. This function have to return <em>full HTML,</em> with head, body, etc. <strong>Required.</strong></p>
+<h3>onUpdate</h3>
+<p>Function, which called on each update of edited text. Optional.</p>
+<h3>save</h3>
+<p>Save function. Receives markdown text as a parameter. Optional.</p>
+<h3>content</h3>
+<p>Initial text content of the editor. Optional.</p>
+<h3>contentId</h3>
+<p>Current content id, for example, file name. Change of content Id initiates redraw. May be omitted.</p>
+<h3>modified</h3>
+<p>Value for modified flag. Upper level component may track changes and set this flag accordingly. When <code>modified=true</code>, save button is highlighted.
+Default = false.</p>
+<h3>indicateChanges</h3>
+<p>Reserved for planned feature.</p>
+<h3>previewClass</h3>
+<p>Optional. Class name for preview panel. Default: markdownPreviewArea</p>
+<h3>fullscreen</h3>
+<p>If true, starts in fullscreen. Default = false.</p>
+<h3>onEnterFullscreen</h3>
+<p>Function to execute on enter full screen. Default: <code>()=&gt;document.body.style.overflow=&quot;hidden&quot;</code></p>
+<h3>onExitFullscreen</h3>
+<p>Function to execute on exit full screen. Default: <code>()=&gt;document.body.style.overflow=&quot;initial&quot;</code></p>
+<h3>trueFullscreen</h3>
+<p>If <code>true</code>, requests fullscreen mode when entering fullscreen, else just fills entire window. Default=<code>false</code></p>
+<h3>showPreview</h3>
+<p>If true, starts with visible preview panel. Default = true.</p>
+<h3>spellCheck</h3>
+<p>If false, starts with spellcheck disabled. Default = true.</p>
+<h3>fullscreenZIndex</h3>
+<p>Z-index, when in fullscreen. Default = 1001.</p>
+<h3>externalPreview</h3>
+<p>External preview function. If defined, will overwrite function of <code>full width preview</code> button. Optional.</p>
+<h3>externalPreviewTitle</h3>
+<p>Hint text for external preview button.</p>
+<h3>imageRewriter</h3>
+<p>Function, which will be applied to all images in preview panel. This function will receive <code>src</code> attribute and must return string (rewritten src). Useful, when you have to rewrite paths for preview.</p>
+<h3>menuItems</h3>
+<p>Optional array of items for drop-down menu. If not present, menu is not shown.</p>
+<pre><code class="language-javascript">items=[
+   { <span class="hljs-string">&quot;label&quot;</span> : <span class="hljs-string">&quot;Label for menu item&quot;</span> , 
+	 <span class="hljs-string">&quot;handler&quot;</span> : <span class="hljs-function">()=&gt;</span><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;click&quot;</span>) },
+   ...
+]
+
+</code></pre>
+<h3>menuTitle</h3>
+<p>Title for menu button. Default = &quot;Additional functions&quot;</p>
+<h3>maxHeight</h3>
+<p>CSS value for maximum editor height. Default = &quot;400px&quot;</p>
+<h3>branding</h3>
+<p>Piece of HTML, which will be displayed on the right side of toolbar. Default — BareMDE version number.</p>
+</main>
+<footer id="pageFooter"></footer>
+<script id="pageData" type="text/markdown">BareMDE :bear: props
+=============
+
+### render
+
+Function, which gets markdown text as a parameter and returns rendered HTML. This function have to return *full HTML,* with head, body, etc. **Required.**
+
+### onUpdate
+
+Function, which called on each update of edited text. Optional.
+   
+### save
+
+Save function. Receives markdown text as a parameter. Optional.
+
+### content
+
+Initial text content of the editor. Optional.
+   
+### contentId
+
+Current content id, for example, file name. Change of content Id initiates redraw. May be omitted.
+
+### modified
+
+Value for modified flag. Upper level component may track changes and set this flag accordingly. When `modified=true`, save button is highlighted. 
+Default = false.
+
+### indicateChanges
+
+Reserved for planned feature.
+
+### previewClass
+
+Optional. Class name for preview panel. Default: markdownPreviewArea
+
+### fullscreen
+
+If true, starts in fullscreen. Default = false.
+
+### onEnterFullscreen
+
+Function to execute on enter full screen. Default: `()=&gt;document.body.style.overflow="hidden"`
+
+### onExitFullscreen
+
+Function to execute on exit full screen. Default: `()=&gt;document.body.style.overflow="initial"`
+
+### trueFullscreen
+
+If `true`, requests fullscreen mode when entering fullscreen, else just fills entire window. Default=`false`
+
+### showPreview
+
+If true, starts with visible preview panel. Default = true.
+
+### spellCheck
+
+If false, starts with spellcheck disabled. Default = true.
+
+### fullscreenZIndex
+
+Z-index, when in fullscreen. Default = 1001.
+
+### externalPreview
+
+External preview function. If defined, will overwrite function of `full width preview` button. Optional. 
+
+### externalPreviewTitle
+
+Hint text for external preview button.
+
+### imageRewriter
+
+Function, which will be applied to all images in preview panel. This function will receive `src` attribute and must return string (rewritten src). Useful, when you have to rewrite paths for preview.
+
+### menuItems
+
+Optional array of items for drop-down menu. If not present, menu is not shown.
+
+```javascript
+items=[
+   { "label" : "Label for menu item" , 
+	 "handler" : ()=&gt;console.log("click") },
+   ...
+]
+
+```
+
+### menuTitle
+
+Title for menu button. Default = "Additional functions"
+
+### maxHeight
+
+CSS value for maximum editor height. Default = "400px"
+
+### branding
+
+Piece of HTML, which will be displayed on the right side of toolbar. Default — BareMDE version number.</script>
+</body>
+</html>
