@@ -12,6 +12,7 @@
   <meta name="og:image" content="">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="">
+  <base target="_blank">
   <link rel="icon" type="image/png" href="">
   <link id = "viewCSS" rel="stylesheet" href="style.css">
   <style id="customCSS">/* write your CSS here*/
@@ -31,22 +32,17 @@
   "author": "",
   "keywords": ""
 }
-   window.savedWithImpVersion = "0.3.1"
+   window.savedWithImpVersion = "0.4.1"
   </script>
   <script>
     window.addEventListener("DOMContentLoaded" , function(){
-
+  
    function IMPEdit(){
    console.info("Loading editor...")
    const editor = document.createElement("script");
    editor.id="editorScript";
    editor.src="imp.js";
    document.head.appendChild(editor);
-   }
-
-   if(window.self.name==="IMPPreviewIframe")
-   {
-   return;
    }
    if(window.location.search.indexOf("mode=view")!=-1)
    {
@@ -64,6 +60,7 @@
    if(window.location.protocol==="file:"){
    IMPEdit();
    }
+  
 })
   </script>
   <!--custom html here-->
@@ -114,7 +111,6 @@ Default = false.</p>
 	 <span class="hljs-string">&quot;handler&quot;</span> : <span class="hljs-function">()=&gt;</span><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&quot;click&quot;</span>) },
    ...
 ]
-
 </code></pre>
 <h3>menuTitle</h3>
 <p>Title for menu button. Default = &quot;Additional functions&quot;</p>
@@ -210,7 +206,6 @@ items=[
 	 "handler" : ()=&gt;console.log("click") },
    ...
 ]
-
 ```
 
 ### menuTitle
