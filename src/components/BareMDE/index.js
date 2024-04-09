@@ -56,6 +56,7 @@ export default class BareMDE extends Component{
        modified: props.modified
      }
      this.currentContent=this.props.content;
+     this.contentId = this.props.contentId;
      this.surroundSelection = this.surroundSelection.bind(this);
      this.handleKey= this.handleKey.bind(this);
      this.togglePreview = this.togglePreview.bind(this);
@@ -81,22 +82,8 @@ export default class BareMDE extends Component{
          props.controls.syncScroll = ()=>this.state.syncScroll && this.syncPreviewScroll();
      }
   }
-  shouldComponentUpdate(p , s){
-     
-     //if content is reset, we have to reset.
-     this.pos = this.jar.save();
-     if(this.props.contentId!==p.contentId){
-         // console.log("Update content...")
-         
-         this.jar.updateCode(p.content);
-         // this.modified = p.modified;
-         this.doPreview();
-     }
-
-    if( s.syncScroll && !this.state.syncScroll ){
-       this.syncPreviewScroll(true);
-    }
-     return true;
+  shouldComponentUpdate(){
+    this.pos = this.jar.save();
   }
 
 
@@ -107,17 +94,19 @@ export default class BareMDE extends Component{
     // but text is not,
     // it means, we have to return cursor
     // to last known position
-    if(this.currentContent==this.props.content){ 
-      // this.pos && this.jar.restore(this.pos) ; 
-      this.pos = this.jar.save() ; // #FIXME
-    } else{
-      // console.log("We need to update editor content!") 
+    if(( this.currentContent!==this.props.content ) ||
+    (this.props.contentId!==this.contentId)
+    ){ 
       this.jar.updateCode(this.props.content); //???
       this.currentContent=this.props.content;
+      this.contentId = this.props.contentId;
+    } else{
+
+      // this.pos = this.jar.save() ; // #FIXME
+      this.pos && this.jar.restore(this.pos); //:??? OR in render()
 
     }
-     // console.log("Component Did Update")
-      this.doPreview(true);
+      this.doPreview();
     
   }
   componentWillUnmount(){
@@ -377,17 +366,15 @@ export default class BareMDE extends Component{
     // toggle preview , toggle fullscreen , <preview only?> , save
 
     return html`<div class="BareMDE 
-       ${ this.state.fullscreen ? 'fullscreen' : 'windowed' }
-       ${ this.state.showPreview ? 'preview' : 'noPreview' }
-       ${ this.state.fullPreview ? 'fullPreview' : '' }
+       ${ this.state.fullscreen && 'fullscreen' }
+       ${ this.state.showPreview && 'showPreview' }
+       ${ this.state.fullPreview && 'fullPreview' }
        "
        ref=${this.componentContainer}
        style="max-height:${ this.state.fullscreen ? '100%' : this.props.maxHeight};z-index:${ this.state.fullscreen ? this.props.fullscreenZIndex : "initial" }"
     >
       <div class="toolbar top 
        ${ this.state.fullscreen ? 'fullscreen' : 'windowed' }
-       ${ this.state.showPreview ? 'preview' : 'noPreview' }
-       ${ this.props.modified ? '' : '' }
       ">
          <${Menu} 
          title=${this.props.menuTitle || "Additional functions"}
