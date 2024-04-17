@@ -314,10 +314,13 @@ export default class BareMDE extends Component{
        if(!this.previewFrame.current.contentWindow){ return } 
       const frameDoc = this.previewFrame.current.contentWindow.document;
       const content =  this.props.render(this.jar.toString());
-      // frameDoc.documentElement.outerHTML = content;
-      frameDoc.open();
-      frameDoc.write(content)
-      frameDoc.close();
+      Promise.resolve(content)
+      .then( r=>{
+          frameDoc.open();
+          frameDoc.write(r)
+          frameDoc.close();
+        }
+      )
 
       if(typeof this.props.imageRewriter==='function'){
         const imgs = frameDoc.querySelectorAll("*[src]");
