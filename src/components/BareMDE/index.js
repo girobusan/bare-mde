@@ -312,38 +312,34 @@ export default class BareMDE extends Component{
 
     const redraw = ()=>{
        if(!this.previewFrame.current.contentWindow){ return } 
-      const frameDoc = this.previewFrame.current.contentWindow.document;
       const content =  this.props.render(this.jar.toString());
       Promise.resolve(content)
       .then( r=>{
-          frameDoc.open();
-          frameDoc.write(r)
-          frameDoc.close();
-      
+        const frameDoc = this.previewFrame.current.contentWindow.document;
+        frameDoc.open();
+        frameDoc.write(r)
+        frameDoc.close();
 
-      if(typeof this.props.imageRewriter==='function'){
-        const imgs = frameDoc.querySelectorAll("*[src]");
-        imgs.forEach(i=>{
-          if(i.getAttribute("src").match(/^http(s)?:/)){
-            return;
-          }
-          i.src = this.props.imageRewriter(i.getAttribute( "src" ));
-        })
-      }
-      const dHeight = Math.max( //need more tests in Chrome
-        frameDoc.body.scrollHeight,
-        frameDoc.documentElement.scrollHeight,
-        frameDoc.documentElement.offsetHeight,
-      )
-       // console.log(
-
-       //   frameDoc.body.scrollHeight,
-       //   frameDoc.body.offsetHeight,
-       //   frameDoc.documentElement.scrollHeight,
-       //   frameDoc.documentElement.offsetHeight,
-       // )
-      this.previewFrame.current.style.height = dHeight+"px";
-      this.syncPreviewScroll();
+        if(typeof this.props.imageRewriter==='function'){
+          const imgs = frameDoc.querySelectorAll("*[src]");
+          imgs.forEach(i=>{
+            if(i.getAttribute("src").match(/^http(s)?:/)){
+              return;
+            }
+            i.src = this.props.imageRewriter(i.getAttribute( "src" ));
+          })
+        }
+        // console.log(frameDoc, frameDoc.body)
+        frameDoc.addEventListener( "DOMContentLoaded" , ()=>{
+          const dHeight = Math.max( //need more tests in Chrome
+            frameDoc.body.scrollHeight, //#BUGGY
+            frameDoc.documentElement.scrollHeight,
+            frameDoc.documentElement.offsetHeight,
+          )
+          this.previewFrame.current.style.height = dHeight+"px";
+          this.syncPreviewScroll();
+        } )
+        // frameDoc.body && console.log("We have body" , frameDoc);
         }
       )
     }
