@@ -319,8 +319,7 @@ export default class BareMDE extends Component{
           frameDoc.open();
           frameDoc.write(r)
           frameDoc.close();
-        }
-      )
+      
 
       if(typeof this.props.imageRewriter==='function'){
         const imgs = frameDoc.querySelectorAll("*[src]");
@@ -332,8 +331,7 @@ export default class BareMDE extends Component{
         })
       }
       const dHeight = Math.max( //need more tests in Chrome
-        // frameDoc.body.scrollHeight,
-        frameDoc.body.offsetHeight,
+        frameDoc.body.scrollHeight,
         frameDoc.documentElement.scrollHeight,
         frameDoc.documentElement.offsetHeight,
       )
@@ -346,6 +344,8 @@ export default class BareMDE extends Component{
        // )
       this.previewFrame.current.style.height = dHeight+"px";
       this.syncPreviewScroll();
+        }
+      )
     }
 
     if(!this.previewThrottled){
