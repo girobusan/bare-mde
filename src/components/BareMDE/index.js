@@ -40,6 +40,7 @@ export default class BareMDE extends Component{
   constructor(props){
      super(props);
      this.previewThrottled = false;
+     this.previewInProcess = false;
      this.scrollThrottled = false;
      this.saveThrottled = false;
      this.componentContainer = createRef();
@@ -308,9 +309,11 @@ export default class BareMDE extends Component{
   async doPreview(force){
     //if preview is hidden and we do not forced to update it, return
     if(!this.state.showPreview&&!force){  return }
-    if(!this.previewFrame.current){ console.log("no iframe") ;console.log() }
+    if(this.state.previewInProcess){  return } //force has no sense
+    if(!this.previewFrame.current){ console.log("no iframe") }
 
     const redraw = ()=>{
+      this.previewInProcess = true; 
        if(!this.previewFrame.current.contentWindow){ return } 
       const content =  this.props.render(this.jar.toString());
       Promise.resolve(content)
@@ -338,10 +341,10 @@ export default class BareMDE extends Component{
           )
           this.previewFrame.current.style.height = dHeight+"px";
           this.syncPreviewScroll();
+          // this.previewInProcess = false;
         } )
-        // frameDoc.body && console.log("We have body" , frameDoc);
         }
-      )
+      ).finally( ()=>this.previewInProcess=false )
     }
 
     if(!this.previewThrottled){
