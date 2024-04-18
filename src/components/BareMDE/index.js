@@ -316,7 +316,7 @@ export default class BareMDE extends Component{
       this.previewInProcess = true; 
        if(!this.previewFrame.current.contentWindow){ return } 
       const content =  this.props.render(this.jar.toString());
-      Promise.resolve(content)
+      return Promise.resolve(content)
       .then( r=>{
         const frameDoc = this.previewFrame.current.contentWindow.document;
         frameDoc.open();
@@ -334,6 +334,7 @@ export default class BareMDE extends Component{
         }
         // console.log(frameDoc, frameDoc.body)
         frameDoc.addEventListener( "DOMContentLoaded" , ()=>{
+          if(!frameDoc.body){return} //too late to calc, drop it
           const dHeight = Math.max( //need more tests in Chrome
             frameDoc.body.scrollHeight, //#BUGGY
             frameDoc.documentElement.scrollHeight,
@@ -348,9 +349,9 @@ export default class BareMDE extends Component{
     }
 
     if(!this.previewThrottled){
-      redraw();
       this.previewThrottled = true;
-      window.setTimeout(()=>{ this.previewThrottled=false; redraw()} , 300);
+      await redraw();
+      window.setTimeout(()=>{ this.previewThrottled=false; !this.previewInProcess && redraw()} , 300);
 
     }
   }
