@@ -163,8 +163,8 @@ export default class BareMDE extends Component{
 
 
   insertAt(txt , pos , what){
-    const prefix = txt.startsWith("\n") ? "\n" : "";
-    return prefix + ( txt.replace( /^\n/ , ""  ) ).substring(0,pos) + what + txt.substring(pos);
+    // const prefix = txt.startsWith("\n") ? "\n" : "";
+    return  txt.substring(0,pos) + what + txt.substring(pos);
   }
 
   surroundSelection( before , after ){
