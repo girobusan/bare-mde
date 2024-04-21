@@ -58,6 +58,7 @@ function MDEDemo(){
    return html`
    <${BareMDE}  
    render=${renderFn} 
+   renderBody=${ (c)=>renderMd(c) }
    save=${saveFn}
    trueFullscreen=${true}
    content=${ testString }  

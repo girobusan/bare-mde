@@ -82,6 +82,9 @@ export default class BareMDE extends Component{
          props.controls.doPreview = this.doPreview;
          props.controls.syncScroll = ()=>this.state.syncScroll && this.syncPreviewScroll();
      }
+     if(props.imageRewriter){
+        console.info("Image rewriter function is removed, please, do the rewritting in upper level component")
+     }
   }
   shouldComponentUpdate(){
     this.pos = this.jar.save();
@@ -160,8 +163,8 @@ export default class BareMDE extends Component{
 
 
   insertAt(txt , pos , what){
-    //FIX: if string starts with newline, insert after newline.
-    return txt.substring(0,pos) + what + txt.substring(pos);
+    const prefix = txt.startsWith("\n") ? "\n" : "";
+    return prefix + ( txt.replace( /^\n/ , ""  ) ).substring(0,pos) + what + txt.substring(pos);
   }
 
   surroundSelection( before , after ){
@@ -306,6 +309,17 @@ export default class BareMDE extends Component{
     };
 
   }
+
+  packPreviewFrame(){
+        const frameDoc = this.previewFrame.current.contentWindow.document;
+          const dHeight = Math.max( //need more tests in Chrome
+            frameDoc.body.scrollHeight, //#BUGGY
+            frameDoc.documentElement.scrollHeight,
+            frameDoc.documentElement.offsetHeight,
+          )
+          this.previewFrame.current.style.height = dHeight+"px";
+  }
+
   async doPreview(force){
     //if preview is hidden and we do not forced to update it, return
     if(!this.state.showPreview&&!force){  return }
@@ -315,7 +329,26 @@ export default class BareMDE extends Component{
     const redraw = ()=>{
       this.previewInProcess = true; 
        if(!this.previewFrame.current.contentWindow){ return } 
-      const content =  this.props.render(this.jar.toString());
+      let content; 
+      let contentWindow =this.previewFrame.current.contentWindow;
+      
+      if(
+      contentWindow.document.body && 
+      contentWindow.document.body.innerHTML && 
+      typeof this.props.renderBody==='function'){
+
+         content = this.props.renderBody( this.jar.toString() ) ;
+         return Promise.resolve(content)
+         .then(r=> { 
+            contentWindow.document.body.innerHTML= r ;
+            this.packPreviewFrame();
+            this.syncPreviewScroll();
+            this.previewInProcess=false;
+            })
+      }
+
+      content =  this.props.render(this.jar.toString())
+
       return Promise.resolve(content)
       .then( r=>{
         const frameDoc = this.previewFrame.current.contentWindow.document;
@@ -323,29 +356,25 @@ export default class BareMDE extends Component{
         frameDoc.write(r)
         frameDoc.close();
 
-        if(typeof this.props.imageRewriter==='function'){
-          const imgs = frameDoc.querySelectorAll("*[src]");
-          imgs.forEach(i=>{
-            if(i.getAttribute("src").match(/^http(s)?:/)){
-              return;
-            }
-            i.src = this.props.imageRewriter(i.getAttribute( "src" ));
-          })
-        }
+        // if(typeof this.props.imageRewriter==='function'){
+        //   const imgs = frameDoc.querySelectorAll("*[src]");
+        //   imgs.forEach(i=>{
+        //     if(i.getAttribute("src").match(/^http(s)?:/)){
+        //       return;
+        //     }
+        //     i.src = this.props.imageRewriter(i.getAttribute( "src" ));
+        //   })
+        // }
         // console.log(frameDoc, frameDoc.body)
         frameDoc.addEventListener( "DOMContentLoaded" , ()=>{
           if(!frameDoc.body){return} //too late to calc, drop it
-          const dHeight = Math.max( //need more tests in Chrome
-            frameDoc.body.scrollHeight, //#BUGGY
-            frameDoc.documentElement.scrollHeight,
-            frameDoc.documentElement.offsetHeight,
-          )
-          this.previewFrame.current.style.height = dHeight+"px";
+          this.packPreviewFrame();
           this.syncPreviewScroll();
+          this.previewInProcess=false;
           // this.previewInProcess = false;
         } )
         }
-      ).finally( ()=>this.previewInProcess=false )
+      )//.finally( ()=>this.previewInProcess=false )
     }
 
     if(!this.previewThrottled){
@@ -474,6 +503,7 @@ export default class BareMDE extends Component{
 
 BareMDE.defaultProps = {
    render: (m)=>`<html><head></head><body><div style='color:navyblue'>${m}</div></body></html>`,
+   renderBody: null,
    onUpdate: ()=>console.log("Editor updated" ),
    save: (c)=>console.log("Dummy save function" , c.substring(0,200)+"..."),
    content: "write here", //text to display on mount
@@ -494,6 +524,6 @@ BareMDE.defaultProps = {
    maxHeight: '400px',
    branding: VERSION,
    controls: null,
-   disable: []
+   //disable: [] //What the hell is that?
 
 }

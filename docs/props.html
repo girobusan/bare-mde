@@ -12,7 +12,6 @@
   <meta name="og:image" content="">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="">
-  <base target="_blank">
   <link rel="icon" type="image/png" href="">
   <link id = "viewCSS" rel="stylesheet" href="style.css">
   <style id="customCSS">/* write your CSS here*/
@@ -32,17 +31,22 @@
   "author": "",
   "keywords": ""
 }
-   window.savedWithImpVersion = "0.4.1"
+   window.savedWithImpVersion = "0.3.1"
   </script>
   <script>
     window.addEventListener("DOMContentLoaded" , function(){
-  
+
    function IMPEdit(){
    console.info("Loading editor...")
    const editor = document.createElement("script");
    editor.id="editorScript";
    editor.src="imp.js";
    document.head.appendChild(editor);
+   }
+
+   if(window.self.name==="IMPPreviewIframe")
+   {
+   return;
    }
    if(window.location.search.indexOf("mode=view")!=-1)
    {
@@ -60,7 +64,6 @@
    if(window.location.protocol==="file:"){
    IMPEdit();
    }
-  
 })
   </script>
   <!--custom html here-->
@@ -69,6 +72,8 @@
 <main class='container'><h1>BareMDE 🐻 props</h1>
 <h3>render</h3>
 <p>Function, which gets markdown text as a parameter and returns rendered HTML. This function have to return <em>full HTML,</em> with head, body, etc. <strong>Required.</strong></p>
+<h3>renderBody</h3>
+<p>Function, which gets markdown text as a parameter, and returns only inner HTML for body tag. If defined, subsequent preview redraws will redraw only body content. May improve preview quality and speed. Optional.</p>
 <h3>onUpdate</h3>
 <p>Function, which called on each update of edited text. Optional.</p>
 <h3>save</h3>
@@ -126,6 +131,10 @@ Default = false.</p>
 ### render
 
 Function, which gets markdown text as a parameter and returns rendered HTML. This function have to return *full HTML,* with head, body, etc. **Required.**
+
+### renderBody
+
+Function, which gets markdown text as a parameter, and returns only inner HTML for body tag. If defined, subsequent preview redraws will redraw only body content. May improve preview quality and speed. Optional.
 
 ### onUpdate
 
