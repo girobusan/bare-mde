@@ -81,6 +81,7 @@ export default class BareMDE extends Component{
      if(props.controls){
          props.controls.doPreview = this.doPreview;
          props.controls.syncScroll = ()=>this.state.syncScroll && this.syncPreviewScroll();
+         props.controls.refreshPreview = this.refreshPreview;
      }
      if(props.imageRewriter){
         console.info("Image rewriter function is removed, please, do the rewritting in upper level component")
@@ -318,6 +319,11 @@ export default class BareMDE extends Component{
             frameDoc.documentElement.offsetHeight,
           )
           this.previewFrame.current.style.height = dHeight+"px";
+  }
+
+  refreshPreview(){
+     this.previewFrame.current.contentWindow.body.innerHTML = "";
+     this.doPreview(true);
   }
 
   async doPreview(force){
