@@ -66,6 +66,7 @@ export default class BareMDE extends Component{
      this.toggleSpellcheck = this.toggleSpellcheck.bind(this);
      this.toggleSyncScroll = this.toggleSyncScroll.bind(this);
      this.doPreview = this.doPreview.bind(this);
+     this.refreshPreview = this.refreshPreview.bind(this);
      
      //
      this.saveFile = this.saveFile.bind(this);
@@ -322,7 +323,7 @@ export default class BareMDE extends Component{
   }
 
   refreshPreview(){
-     this.previewFrame.current.contentWindow.body.innerHTML = "";
+     this.previewFrame.current.contentWindow.document.body.innerHTML = "";
      this.doPreview(true);
   }
 
