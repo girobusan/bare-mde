@@ -362,6 +362,7 @@ export default class BareMDE extends Component{
         frameDoc.open();
         frameDoc.write(r)
         frameDoc.close();
+        frameDoc.addEventListener("click" , (e)=>{e.stopPropagation();e.preventDefault()} , true);
 
         // if(typeof this.props.imageRewriter==='function'){
         //   const imgs = frameDoc.querySelectorAll("*[src]");
