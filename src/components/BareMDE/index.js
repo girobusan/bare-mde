@@ -223,7 +223,7 @@ export default class BareMDE extends Component{
     this.scrollThrottled = true;
     const doScroll = ()=>{
       //preview height
-      const previewFullH = this.previewFrame.current.contentWindow.document.body.scrollHeight;
+      const previewFullH = this.previewFrame.current.contentWindow.document.documentElement.scrollHeight;
       // console.log("SH" , previewFullH )
       //editor height
       const editorFullH = this.codeJarContainer.current.scrollHeight;
