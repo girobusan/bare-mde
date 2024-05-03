@@ -242,6 +242,8 @@
       overflow: auto;
       flex-basis: 0;
       display: none;
+      position: relative;
+
 
       iframe{
         all:unset;
@@ -250,6 +252,11 @@
         border: none;
         margin:0;
         box-sizing: border-box;
+        position: absolute;
+        top: 0 ;
+        bottom: 0 ;
+        left: 0 ;
+        right: 0 ;
       }
     }
   }

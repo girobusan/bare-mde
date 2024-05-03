@@ -223,7 +223,8 @@ export default class BareMDE extends Component{
     this.scrollThrottled = true;
     const doScroll = ()=>{
       //preview height
-      const previewFullH = this.previewContainer.current.scrollHeight;
+      const previewFullH = this.previewFrame.current.contentWindow.document.body.scrollHeight;
+      // console.log("SH" , previewFullH )
       //editor height
       const editorFullH = this.codeJarContainer.current.scrollHeight;
       const editorScrolled = this.codeJarContainer.current.scrollTop;
@@ -235,8 +236,9 @@ export default class BareMDE extends Component{
       const editorRatio = editorScrolled/( editorFullH - elementHeight );
 
 
-      const scrollPreviewTo =  ( previewFullH-elementHeight ) * editorRatio;
-      this.previewContainer.current.scrollTo(
+      const scrollPreviewTo =  Math.round( ( previewFullH-elementHeight ) * editorRatio );
+      // console.log("scrolling to" , scrollPreviewTo )
+      this.previewFrame.current.contentWindow.document.documentElement.scrollTo(
         {top: scrollPreviewTo , 
           left:0 , 
           behavior: "smooth"}
@@ -312,15 +314,15 @@ export default class BareMDE extends Component{
 
   }
 
-  packPreviewFrame(){
-        const frameDoc = this.previewFrame.current.contentWindow.document;
-          const dHeight = Math.max( //need more tests in Chrome
-            frameDoc.body.scrollHeight, //#BUGGY
-            frameDoc.documentElement.scrollHeight,
-            frameDoc.documentElement.offsetHeight,
-          )
-          this.previewFrame.current.style.height = dHeight+"px";
-  }
+  // packPreviewFrame(){
+  //       const frameDoc = this.previewFrame.current.contentWindow.document;
+  //         const dHeight = Math.max( //need more tests in Chrome
+  //           frameDoc.body.scrollHeight, //#BUGGY
+  //           frameDoc.documentElement.scrollHeight,
+  //           frameDoc.documentElement.offsetHeight,
+  //         )
+  //         // this.previewFrame.current.style.height = dHeight+"px";
+  // }
 
   refreshPreview(){
      this.previewFrame.current.contentWindow.document.body.innerHTML = "";
@@ -348,7 +350,7 @@ export default class BareMDE extends Component{
          return Promise.resolve(content)
          .then(r=> { 
             contentWindow.document.body.innerHTML= r ;
-            this.packPreviewFrame();
+            // this.packPreviewFrame();
             this.syncPreviewScroll();
             this.previewInProcess=false;
             })
@@ -376,7 +378,7 @@ export default class BareMDE extends Component{
         // console.log(frameDoc, frameDoc.body)
         frameDoc.addEventListener( "DOMContentLoaded" , ()=>{
           if(!frameDoc.body){return} //too late to calc, drop it
-          this.packPreviewFrame();
+          // this.packPreviewFrame();
           this.syncPreviewScroll();
           this.previewInProcess=false;
           // this.previewInProcess = false;
