@@ -8,6 +8,26 @@ const Prism =  require("./prism/prism.js")
 
 import Menu from "./Menu";
 import TButton from "./TButton";
+const iframeScrollbars = `<style>
+body , html{
+scrollbar-width: thin;
+scrollbar-color: #444 #dddddd;
+}
+
+html::-webkit-scrollbar{
+width: 6px;
+}
+html::-webkit-scrollbar-track{
+background: #dddddd;
+}
+html::-webkit-scrollbar-thumb {
+background-color: #444;
+border-radius: 3px;
+-webkit-border-radius: 3px;
+overflow: hidden;
+}
+
+</style>`
 //
 //   ICONS
 //
@@ -365,6 +385,8 @@ export default class BareMDE extends Component{
         frameDoc.write(r)
         frameDoc.close();
         frameDoc.addEventListener("click" , (e)=>{e.stopPropagation();e.preventDefault()} , true);
+
+            frameDoc.head.innerHTML += iframeScrollbars; 
 
         // if(typeof this.props.imageRewriter==='function'){
         //   const imgs = frameDoc.querySelectorAll("*[src]");
