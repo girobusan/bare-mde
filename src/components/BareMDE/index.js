@@ -279,25 +279,36 @@ export default class BareMDE extends Component{
   }
 
   toggleFullscreen(){
-     // console.log("Toggle fullscreen");
-     
-     const v = !this.state.fullscreen;
-     if(v){
-     typeof this.props.onEnterFullscreen === 'function' && this.props.onEnterFullscreen();
-     this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex 
-     if(this.props.trueFullscreen && document.fullscreenEnabled){ this.componentContainer.current.requestFullscreen() }
-     }
-     else{ 
-       typeof this.props.onExitFullscreen === 'function' && this.props.onExitFullscreen();
-       this.componentContainer.current.style.zIndex = "unset"
-       if(this.props.trueFullscreen && document.fullscreenEnabled){ document.exitFullscreen()}
-       }
-     try {
-        this.setState({fullscreen: v});
-     }catch(e){
-       console.error("Error found!" , e);
-     }
-     // this.doPreview();
+    // console.log("Toggle fullscreen");
+    const syncFF = ()=>{
+      // console.log("we change fs mode!!1")
+      if( !document.fullscreenElement && this.state.fullscreen )
+    {
+        this.setState({fullscreen: false}) 
+      }
+    };
+
+    const v = !this.state.fullscreen;
+    if(v){
+      typeof this.props.onEnterFullscreen === 'function' && this.props.onEnterFullscreen();
+      this.componentContainer.current.style.zIndex = this.props.fullscreenZIndex 
+      if(this.props.trueFullscreen && document.fullscreenEnabled){
+        this.componentContainer.current.requestFullscreen() 
+        this.componentContainer.current.addEventListener("fullscreenchange" , syncFF)
+      }
+    }
+    else{ 
+      typeof this.props.onExitFullscreen === 'function' && this.props.onExitFullscreen();
+      this.componentContainer.current.style.zIndex = "unset"
+      if(this.props.trueFullscreen && document.fullscreenEnabled){ document.exitFullscreen()}
+      this.componentContainer.current.removeEventListener("fullscreenchange" , syncFF)
+    }
+    try {
+      this.setState({fullscreen: v});
+    }catch(e){
+      console.error("Error found!" , e);
+    }
+    // this.doPreview();
   }
   togglePreview(){
      
