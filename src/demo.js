@@ -1,21 +1,22 @@
 import "preact/debug";
-import {h, render } from "preact";
-import {html} from "htm/preact";
+import { h, render } from "preact";
+import { html } from "htm/preact";
 import BareMDE from "./components/BareMDE";
 // import { BareMDE } from "../test/editor_old_v/BareMDE";
 import { renderMd } from "./mdops";
-import {useCallback , useState} from "preact/hooks";
-const ticks = "```"
+import { useCallback, useState } from "preact/hooks";
+const ticks = "```";
+import smile from "./supplement/sentiment_satisfied_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg?raw";
 
-const menu = [ 
-   { "label": "test menu items" , "handler": ()=>alert("Menu item clicked") },
-   { "label": "test2" , "handler": ()=>alert("Menu item2 clicked") },
-   ]
+const menu = [
+   { label: "test menu items", handler: () => alert("Menu item clicked") },
+   { label: "test2", handler: () => alert("Menu item2 clicked") },
+];
 
-const shortString=`Lorem Ipsum
+const shortString = `Lorem Ipsum
 -----------
 
-Lorem ipsum __dolor sit__ amet, consectetur adipiscing elit,`
+Lorem ipsum __dolor sit__ amet, consectetur adipiscing elit,`;
 
 const testString = `# Why another web editor for markdown?
 
@@ -41,40 +42,47 @@ Lorem ipsum __dolor sit__ amet, consectetur adipiscing elit, sed do eiusmod temp
 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia [deserunt mollit](https://github.com) anim id est laborum.
 
 ---
-`
+`;
 
-function MDEDemo(){
-   const [ modified , setModified ]= useState(false);
-   const saveFn = useCallback((c)=>{ setModified(false) ; alert("Save is not implemented in demo" ), console.log(c) }, [])
-   const renderFn = useCallback( 
-     m=>`<!DOCTYPE html>
+function MDEDemo() {
+   const [modified, setModified] = useState(false);
+   const saveFn = useCallback((c) => {
+      setModified(false);
+      alert("Save is not implemented in demo"), console.log(c);
+   }, []);
+   const renderFn = useCallback(
+      (m) => `<!DOCTYPE html>
      <html><head>
      <!--css-->
      <link rel='stylesheet' href='simple.css'>
-     </head><body><main>${ renderMd(m) }</main></body></html>` 
-   ,[]
-   )
-   const onChangeFn = useCallback( (c)=>{console.log("change.."  ); !modified && setModified(true) } );
+     </head><body><main>${renderMd(m)}</main></body></html>`,
+      [],
+   );
+   const onChangeFn = useCallback((c) => {
+      console.log("change..");
+      !modified && setModified(true);
+   });
+
    return html`
-   <${BareMDE}  
-   render=${renderFn} 
-   renderBody=${ (c)=>renderMd(c) }
-   save=${saveFn}
-   trueFullscreen=${true}
-   content=${ testString }  
-   modified=${ modified }
-   maxHeight="500px"
-   onUpdate=${onChangeFn}
-   menuItems=${ menu }/>
-   `
-  
+    <${BareMDE}
+      render=${renderFn}
+      renderBody=${(c) => renderMd(c)}
+      save=${saveFn}
+      trueFullscreen=${true}
+      content=${testString}
+      modified=${modified}
+      maxHeight="500px"
+      onUpdate=${onChangeFn}
+      menuItems=${menu}
+      customButtons=${[
+         { svgOff: smile, isOn: false, onClick: () => console.log("smile") },
+      ]}
+    />
+  `;
 }
 
-console.log("about to start..." , testString)
-const editor = h( MDEDemo , {});
+console.log("about to start...", testString);
+const editor = h(MDEDemo, {});
 
 const element = document.querySelector("#editorTest");
-render(  editor , element);
-
-
-
+render(editor, element);
